@@ -1,53 +1,115 @@
-import React from 'react';
+"use client";
 
-const WeatherCard = ({ weatherData }) => {
-  const { temp, weather, city, forecast } = weatherData;
+import React, { useEffect, useState } from "react";
+import Image from "next/image";
+import { format, addDays } from "date-fns";
+
+// Importing images and icons
+import sunnyIcon from "@/public/icons/sunny.svg";
+import partlyCloudyIcon from "@/public/icons/partly-cloudy.svg";
+import thunderstormIcon from "@/public/icons/thunderstorm.svg";
+
+const WeatherCard = ({ location = "Bengaluru" }) => {
+  const [weatherData, setWeatherData] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchWeatherData = async () => {
+      try {
+        const API_KEY = "509d81ffc2474dacb23143524232306";
+        const res = await fetch(
+          `https://api.weatherapi.com/v1/forecast.json?key=${API_KEY}&q=${location}&days=3&aqi=yes`
+        );
+
+        if (!res.ok) {
+          throw new Error(
+            `Failed to fetch weather data: ${res.status} ${res.statusText}`
+          );
+        }
+
+        const data = await res.json();
+
+        if (!data.forecast || !data.forecast.forecastday) {
+          throw new Error("Invalid API response structure");
+        }
+
+        // Extracting relevant data for the weather card
+        const weatherData = data.forecast.forecastday.map((day) => ({
+          temp: day.day.avgtemp_c,
+          condition: day.day.condition.text,
+          icon: day.day.condition.icon,
+          isDay: day.day.condition.icon.includes("day"),
+          date: day.date,
+          location: `${data.location.name}, ${data.location.region}`,
+        }));
+
+        setWeatherData(weatherData);
+      } catch (error) {
+        console.error(error);
+        setError(error.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchWeatherData();
+  }, [location]);
+
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>Error: {error}</p>;
+
+  // Use date-fns to get the actual day names
+  const dayNames = weatherData.map((dayData, index) =>
+    format(addDays(new Date(), index), "EEE")
+  );
+
+  const weatherIcons = [sunnyIcon, partlyCloudyIcon, thunderstormIcon];
+
+  const weeklyData = weatherData.map((dayData, index) => {
+    const weatherMapping = {
+      image: dayData.icon,
+      icon: weatherIcons[index % 3],
+    };
+
+    return {
+      image: weatherMapping.image,
+      icon: weatherMapping.icon,
+      temp: dayData.temp,
+      day: dayNames[index],
+    };
+  });
 
   return (
-    <div className="max-w-xs p-4 bg-white rounded-lg shadow-lg">
-      <div className="flex items-center justify-between">
-        <div className="flex items-center">
-          <img
-            src={`http://openweathermap.org/img/wn/${weather.icon}@2x.png`}
-            alt={weather.description}
-            className="w-12 h-12"
-          />
-          <div className="ml-4">
-            <h2 className="text-4xl font-bold">{Math.round(temp)}°</h2>
-            <p className="text-gray-500">{city}</p>
-          </div>
-        </div>
-        <div>
-          <button className="text-gray-500">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              className="w-6 h-6"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M6 18L18 6M6 6l12 12"
-              />
-            </svg>
-          </button>
-        </div>
-      </div>
-      <div className="mt-4 flex justify-between">
-        {forecast.map((day, index) => (
-          <div key={index} className="text-center">
+    <div className="max-w-xs mx-auto bg-white rounded-xl shadow-md overflow-hidden">
+      <div className="p-6">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center">
             <img
-              src={`http://openweathermap.org/img/wn/${day.icon}@2x.png`}
-              alt={day.description}
-              className="w-8 h-8 mx-auto"
+              src={`https:${weeklyData[0]?.image}`}
+              alt="Weather"
+              width={55}
+              height={55}
             />
-            <p className="mt-2 text-lg font-medium">{Math.round(day.temp)}°</p>
-            <p className="text-gray-500">{day.day}</p>
+            <div className="ml-4">
+              <div className="text-4xl font-bold">
+                {weeklyData[0]?.temp}&#176;
+              </div>
+              <div className="text-gray-500">{weatherData[0]?.location}</div>
+            </div>
           </div>
-        ))}
+        </div>
+        <div className="mt-6">
+          <div className="flex justify-between text-sm text-gray-600">
+            {weeklyData.map((data, index) => (
+              <div className="flex flex-col items-center" key={index}>
+                <Image src={data.icon} alt={data.day} width={24} height={24} />
+                <div className="font-bold">{data.temp}&#176;</div>
+                <div>{data.day}</div>
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
     </div>
   );

@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import React from 'react';
-import { DragDropContext, Droppable } from 'react-beautiful-dnd';
-import TodoItem from './TodoItem';
+import React from "react";
+import { DragDropContext, Droppable } from "react-beautiful-dnd";
+import TodoItem from "./TodoItem";
 
 const TodoList = ({ todos, onDragEnd, onEdit, onDelete }) => {
   return (
@@ -14,15 +14,16 @@ const TodoList = ({ todos, onDragEnd, onEdit, onDelete }) => {
           <span className="col-span-2 text-left">Task name</span>
           <span className="col-span-1 text-left">Assignee</span>
           <span className="col-span-1 text-left">Priority</span>
-          <span className="col-span-1 text-left"></span> {/* Empty column for actions */}
+          <span className="col-span-1 text-left"></span>{" "}
+          {/* Empty column for actions */}
         </div>
 
-        <Droppable droppableId="todos._id">
+        <Droppable droppableId="todos.id">
           {(provided, snapshot) => (
             <div
               ref={provided.innerRef}
               {...provided.droppableProps}
-              className={`p-2 ${snapshot.isDraggingOver ? 'bg-gray-100' : ''}`}
+              className={`p-2 ${snapshot.isDraggingOver ? "bg-gray-100" : ""}`}
             >
               {todos.map((todo, index) => (
                 <TodoItem
