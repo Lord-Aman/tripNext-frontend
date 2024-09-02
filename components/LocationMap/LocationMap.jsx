@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import { MapContainer, TileLayer } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 
+//TODO: Add pinpoint
 const LocationMap = ({ locationName = "Rome" }) => {
   const [center, setCenter] = useState(null);
 
