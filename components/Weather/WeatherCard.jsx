@@ -17,6 +17,7 @@ const WeatherCard = ({ location = "Bengaluru" }) => {
   useEffect(() => {
     const fetchWeatherData = async () => {
       try {
+        //TODO: Add it to env variable
         const API_KEY = "509d81ffc2474dacb23143524232306";
         const res = await fetch(
           `https://api.weatherapi.com/v1/forecast.json?key=${API_KEY}&q=${location}&days=3&aqi=yes`
@@ -81,7 +82,7 @@ const WeatherCard = ({ location = "Bengaluru" }) => {
   });
 
   return (
-    <div className="max-w-xs mx-auto bg-white rounded-xl shadow-md overflow-hidden">
+    <div className="max-w-xs mx-auto bg-[#FAF9FF] h-52 w-56 mb-4 rounded-xl shadow-md overflow-hidden">
       <div className="p-6">
         <div className="flex items-center justify-between">
           <div className="flex items-center">

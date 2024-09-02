@@ -7,6 +7,12 @@ module.exports = {
   ],
   theme: {
     extend: {
+      colors: {
+        customBlue: "#346AFF",
+      },
+      boxShadow: {
+        custom: "0px 8px 8px rgba(52, 106, 255, 0.15)", // Custom shadow
+      },
       fontFamily: {
         sans: ["Sora", "sans-serif"],
       },

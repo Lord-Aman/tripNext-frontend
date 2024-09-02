@@ -57,7 +57,7 @@ const WeatherCardLocation = () => {
   ];
 
   return (
-    <div className="max-w-xs mx-auto bg-white rounded-xl shadow-md overflow-hidden">
+    <div className="max-w-xs mx-auto bg-[#FAF9FF]  rounded-xl shadow-md overflow-hidden">
       <div className="p-6">
         <div className="flex items-center justify-between">
           <div className="flex items-center">
