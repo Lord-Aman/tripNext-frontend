@@ -22,7 +22,7 @@ export default function RootLayout({ children }) {
           <Sidebar />
           <div className="flex flex-col flex-grow">
             <Navbar />
-            <main className="flex-grow p-8 bg-backgroundGray">{children}</main>
+            <main className="flex-grow p-2 bg-backgroundGray">{children}</main>
           </div>
         </div>
       </body>

@@ -1,189 +1,432 @@
 "use client";
 
-import React, { useState } from "react";
-import dayjs from "dayjs";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { DateCalendar } from "@mui/x-date-pickers/DateCalendar";
-import { Bus, Element2, Airplane } from "iconsax-react";
+import React, { useState, useEffect, useRef } from "react";
+import {
+  ChevronLeft,
+  ChevronRight,
+  Plus,
+  MoreVertical,
+  Plane,
+  Bus,
+  Home,
+} from "lucide-react";
 
-import { calculateHeight, calculateTopPosition } from "@/utils/timeUtils";
+const EventCalendar = () => {
+  const [events, setEvents] = useState([
+    {
+      id: "1",
+      title: "Warsaw → Rome",
+      date: "2023-09-17",
+      startTime: "08:00",
+      endTime: "09:15",
+      type: "flight",
+    },
+    {
+      id: "2",
+      title: "Bus transfer",
+      date: "2023-09-17",
+      startTime: "09:30",
+      endTime: "10:00",
+      type: "bus",
+    },
+    {
+      id: "3",
+      title: "Check into a hotel",
+      date: "2023-09-17",
+      startTime: "10:00",
+      endTime: "10:40",
+      type: "hotel",
+    },
+  ]);
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [selectedEvent, setSelectedEvent] = useState(null);
+  const [currentDate, setCurrentDate] = useState(new Date());
+  const [currentTime, setCurrentTime] = useState(new Date());
 
-const events = {
-  "2022-09-01": [
-    {
-      time: "01:00 AM",
-      title: "Warsaw Rome",
-      duration: "01:00 - 03:00",
-      color: "#82bdf9",
-      textColor: "#177ade",
-      iconBgColor: "#177ade",
-      iconColor: "#82bdf9",
-      icon: <Airplane size="32" />,
-    },
-    {
-      time: "02:00 PM",
-      title: "Bus Transfer",
-      duration: "03:00 - 03:30",
-      color: "#cdf9e4",
-      textColor: "#28e388",
-      iconBgColor: "#28e388",
-      iconColor: "#cdf9e4",
-      icon: <Bus size="32" />,
-    },
-    {
-      time: "08:00 PM",
-      title: "Check into a Hotel",
-      duration: "04:00 - 08:00",
-      color: "#f58c15",
-      textColor: "#f8dcbc",
-      iconBgColor: "#f8dcbc",
-      iconColor: "#f58c15",
-      icon: <Element2 size="32" />,
-    },
-  ],
-  "2022-09-02": [
-    {
-      time: "09:00 AM",
-      title: "Meeting with Client",
-      duration: "09:00 - 10:00",
-      color: "#ADD8E6",
-      textColor: "#000000",
-      iconBgColor: "#000000",
-      iconColor: "#ADD8E6",
-      icon: <Airplane size="32" />,
-    },
-    {
-      time: "11:00 AM",
-      title: "Project deadline",
-      duration: "11:00 - 12:00",
-      color: "#FFB6C1",
-      textColor: "#000000",
-      iconBgColor: "#000000",
-      iconColor: "#FFB6C1",
-      icon: <Bus size="32" />,
-    },
-    {
-      time: "01:00 PM",
-      title: "Lunch Break",
-      duration: "01:00 - 02:00",
-      color: "#90EE90",
-      textColor: "#000000",
-      iconBgColor: "#000000",
-      iconColor: "#90EE90",
-      icon: <Element2 size="32" />,
-    },
-    {
-      time: "03:00 PM",
-      title: "Appointment",
-      duration: "03:00 - 03:30",
-      color: "#E6E6FA",
-      textColor: "#000000",
-      iconBgColor: "#000000",
-      iconColor: "#E6E6FA",
-      icon: <Bus size="32" />,
-    },
-    {
-      time: "05:00 PM",
-      title: "Evening Review",
-      duration: "05:00 - 06:00",
-      color: "#FFDAB9",
-      textColor: "#000000",
-      iconBgColor: "#000000",
-      iconColor: "#FFDAB9",
-      icon: <Airplane size="32" />,
-    },
-  ],
-};
+  const timelineRef = useRef(null);
 
-export default function EventCalendar() {
-  const [selectedDate, setSelectedDate] = useState(dayjs("2022-09-01"));
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentTime(new Date());
+    }, 60000); // Update every minute
 
-  const handleDateChange = (newDate) => {
-    setSelectedDate(newDate || dayjs());
+    return () => clearInterval(timer);
+  }, []);
+
+  useEffect(() => {
+    if (timelineRef.current) {
+      const currentTimePosition = getTimePosition(currentTime);
+      timelineRef.current.scrollTop = currentTimePosition - 100; // Scroll to current time minus some offset
+    }
+  }, [currentTime]);
+
+  const openCreateModal = () => setIsCreateModalOpen(true);
+  const closeCreateModal = () => setIsCreateModalOpen(false);
+
+  const openEditModal = (event) => {
+    setSelectedEvent(event);
+    setIsEditModalOpen(true);
+  };
+  const closeEditModal = () => {
+    setSelectedEvent(null);
+    setIsEditModalOpen(false);
   };
 
-  const formattedDate = selectedDate.format("YYYY-MM-DD");
-  const selectedEvents = events[formattedDate] || [];
+  const addEvent = (newEvent) => {
+    setEvents([...events, { ...newEvent, id: Date.now().toString() }]);
+    closeCreateModal();
+  };
 
-  const timeSlots = Array.from({ length: 12 }, (_, i) => i + 1).map((hour) => {
-    const displayHour = hour < 10 ? `0${hour}` : `${hour}`;
-    return `${displayHour}:00`;
-  });
+  const updateEvent = (updatedEvent) => {
+    setEvents(
+      events.map((event) =>
+        event.id === updatedEvent.id ? updatedEvent : event
+      )
+    );
+    closeEditModal();
+  };
+
+  const deleteEvent = (eventId) => {
+    setEvents(events.filter((event) => event.id !== eventId));
+    closeEditModal();
+  };
+
+  const getTimePosition = (time) => {
+    const hours = time.getHours();
+    const minutes = time.getMinutes();
+    return (hours * 60 + minutes) * 2; // 2px per minute
+  };
 
   return (
-    <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <div className="bg-white border border-gray-300 rounded-lg w-fit m-3">
-        <DateCalendar
-          value={selectedDate}
-          onChange={handleDateChange}
-          className="bg-white rounded-lg"
+    <div className="w-full h-[90vh] mx-auto bg-backgroundGray p-6 rounded-lg">
+      <Header openCreateModal={openCreateModal} />
+      <Calendar
+        currentDate={currentDate}
+        setCurrentDate={setCurrentDate}
+        events={events}
+      />
+      <TimelineView
+        events={events}
+        openEditModal={openEditModal}
+        currentTime={currentTime}
+        timelineRef={timelineRef}
+      />
+      {isCreateModalOpen && (
+        <EventModal onClose={closeCreateModal} onSave={addEvent} />
+      )}
+      {isEditModalOpen && selectedEvent && (
+        <EventModal
+          event={selectedEvent}
+          onClose={closeEditModal}
+          onSave={updateEvent}
+          onDelete={deleteEvent}
         />
-      </div>
-
-      <div className="mt-6 p-4 rounded-lg w-fit flex m-3">
-        <div className="w-16 pr-4">
-          {timeSlots.map((time, index) => (
-            <div key={time} className="relative" style={{ height: "60px" }}>
-              <div
-                className="text-gray-600 absolute left-0"
-                style={{ top: `${index * 60}px` }}
-              >
-                {time}
-              </div>
-              <div
-                className="border-b border-gray-200 absolute"
-                style={{
-                  top: `${index * 60 + 30}px`,
-                  left: "0",
-                  width: "300px",
-                }}
-              ></div>
-            </div>
-          ))}
-        </div>
-
-        <div className="flex-grow pl-8">
-          {selectedEvents.length > 0 ? (
-            selectedEvents.map((event, index) => {
-              const [startTime, endTime] = event.duration.split(" - ");
-              return (
-                <div key={index} className="mb-6 relative">
-                  <div
-                    className="flex items-start justify-start border border-gray-300 rounded-xl"
-                    style={{
-                      height: calculateHeight(startTime, endTime),
-                      width: "210px",
-                      backgroundColor: event.color,
-                      color: event.textColor,
-                      position: "absolute",
-                      top: calculateTopPosition(startTime),
-                    }}
-                  >
-                    <div className="flex-grow flex items-start p-2 rounded-xl w-full">
-                      <p
-                        className="bg-black rounded-full p-1"
-                        style={{
-                          backgroundColor: event.iconBgColor,
-                          color: event.iconColor,
-                        }}
-                      >
-                        {event.icon}
-                      </p>
-                      <div className="ml-3 flex flex-col justify-start">
-                        <p className="font-bold">{event.title}</p>
-                        <p className="font-semibold">{event.duration}</p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              );
-            })
-          ) : (
-            <p>No events for this date</p>
-          )}
-        </div>
-      </div>
-    </LocalizationProvider>
+      )}
+    </div>
   );
-}
+};
+
+const Header = ({ openCreateModal }) => (
+  <header className="flex justify-between items-center mb-6">
+    <h1 className="text-2xl font-bold">Timeline</h1>
+    <button
+      onClick={openCreateModal}
+      className="bg-gray-800 text-white px-4 py-2 rounded-lg flex items-center"
+    >
+      Add event
+      <Plus className="ml-2 h-5 w-5" />
+    </button>
+  </header>
+);
+
+const Calendar = ({ currentDate, setCurrentDate, events }) => {
+  const daysInMonth = new Date(
+    currentDate.getFullYear(),
+    currentDate.getMonth() + 1,
+    0
+  ).getDate();
+  const firstDayOfMonth = new Date(
+    currentDate.getFullYear(),
+    currentDate.getMonth(),
+    1
+  ).getDay();
+  const days = Array.from({ length: 42 }, (_, i) => {
+    const day = i - firstDayOfMonth + 1;
+    return day > 0 && day <= daysInMonth ? day : null;
+  });
+
+  const hasEventOnDate = (day) => {
+    const date = new Date(
+      currentDate.getFullYear(),
+      currentDate.getMonth(),
+      day
+    );
+    return events.some(
+      (event) => new Date(event.date).toDateString() === date.toDateString()
+    );
+  };
+
+  const prevMonth = () => {
+    setCurrentDate(
+      new Date(currentDate.getFullYear(), currentDate.getMonth() - 1, 1)
+    );
+  };
+
+  const nextMonth = () => {
+    setCurrentDate(
+      new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 1)
+    );
+  };
+
+  return (
+    <div className="mb-6">
+      <div className="flex justify-between items-center mb-4">
+        <h2 className="text-xl font-semibold">
+          {currentDate.toLocaleString("default", {
+            month: "long",
+            year: "numeric",
+          })}
+        </h2>
+        <div className="flex space-x-2">
+          <button onClick={prevMonth}>
+            <ChevronLeft className="h-6 w-6 text-gray-400" />
+          </button>
+          <button onClick={nextMonth}>
+            <ChevronRight className="h-6 w-6 text-gray-400" />
+          </button>
+        </div>
+      </div>
+      <div className="grid grid-cols-7 gap-2 text-center">
+        {["Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"].map((day) => (
+          <div key={day} className="text-gray-400 text-sm">
+            {day}
+          </div>
+        ))}
+        {days.map((day, index) => (
+          <div
+            key={index}
+            className={`
+              h-8 w-8 flex items-center justify-center rounded-full text-sm relative
+              ${
+                day === currentDate.getDate()
+                  ? "bg-blue-500 shadow-lg text-white"
+                  : ""
+              }
+              ${day ? "text-gray-700" : "text-gray-300"}
+            `}
+          >
+            {day}
+            {day && hasEventOnDate(day) && (
+              <span className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-1 h-1 bg-blue-500 rounded-full"></span>
+            )}
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+const TimelineView = ({ events, openEditModal, currentTime, timelineRef }) => {
+  const hours = Array.from({ length: 24 }, (_, i) => i);
+
+  const getEventStyle = (event) => {
+    const startMinutes =
+      parseInt(event.startTime.split(":")[0]) * 60 +
+      parseInt(event.startTime.split(":")[1]);
+    const endMinutes =
+      parseInt(event.endTime.split(":")[0]) * 60 +
+      parseInt(event.endTime.split(":")[1]);
+    const top = startMinutes * 2; // 2px per minute
+    const height = (endMinutes - startMinutes) * 2;
+
+    return {
+      position: "absolute",
+      top: `${top}px`,
+      height: `${height}px`,
+      left: "60px",
+      right: "0",
+    };
+  };
+
+  const getCurrentTimePosition = () => {
+    const minutes = currentTime.getHours() * 60 + currentTime.getMinutes();
+    return minutes * 2; // 2px per minute
+  };
+
+  return (
+    <div className="relative h-[50vh] overflow-y-auto" ref={timelineRef}>
+      <div
+        className="absolute top-0 left-0 w-full"
+        style={{ height: "2880px" }}
+      >
+        {" "}
+        {/* 24 hours * 60 minutes * 2px */}
+        {hours.map((hour) => (
+          <div
+            key={hour}
+            className="flex items-center"
+            style={{ height: "120px" }}
+          >
+            {" "}
+            {/* 60 minutes * 2px */}
+            <span className="w-12 text-xs text-gray-400">
+              {hour.toString().padStart(2, "0")}:00
+            </span>
+            <div className="flex-1 border-t border-gray-200 ml-2"></div>
+          </div>
+        ))}
+        {events.map((event) => (
+          <div
+            key={event.id}
+            onClick={() => openEditModal(event)}
+            className={`rounded-lg p-3 mb-4 cursor-pointer absolute left-14 right-0 ${
+              event.type === "flight"
+                ? "bg-blue-100"
+                : event.type === "bus"
+                ? "bg-green-100"
+                : "bg-orange-100"
+            }`}
+            style={getEventStyle(event)}
+          >
+            <div className="flex items-center justify-between">
+              <div className="flex items-center">
+                {event.type === "flight" && (
+                  <Plane className="h-5 w-5 text-blue-500 mr-2" />
+                )}
+                {event.type === "bus" && (
+                  <Bus className="h-5 w-5 text-green-500 mr-2" />
+                )}
+                {event.type === "hotel" && (
+                  <Home className="h-5 w-5 text-orange-500 mr-2" />
+                )}
+                <div>
+                  <p
+                    className={`font-medium ${
+                      event.type === "flight"
+                        ? "text-blue-500"
+                        : event.type === "bus"
+                        ? "text-green-500"
+                        : "text-orange-500"
+                    }`}
+                  >
+                    {event.title}
+                  </p>
+                  <p className="text-xs text-gray-500">
+                    {event.startTime} • {event.endTime}
+                  </p>
+                </div>
+              </div>
+              <MoreVertical className="h-5 w-5 text-gray-400" />
+            </div>
+          </div>
+        ))}
+        <div
+          className="absolute left-0 right-0 h-0.5 bg-blue-500 z-10"
+          style={{ top: `${getCurrentTimePosition()}px` }}
+        ></div>
+        <div
+          className="absolute left-0 w-12 h-6 rounded-full bg-blue-500 flex items-center justify-center text-white text-xs z-20"
+          style={{ top: `${getCurrentTimePosition() - 12}px` }}
+        >
+          {currentTime.toLocaleTimeString([], {
+            hour: "2-digit",
+            minute: "2-digit",
+          })}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const EventModal = ({ event, onClose, onSave, onDelete }) => {
+  const [title, setTitle] = useState(event ? event.title : "");
+  const [date, setDate] = useState(event ? event.date : "");
+  const [startTime, setStartTime] = useState(event ? event.startTime : "");
+  const [endTime, setEndTime] = useState(event ? event.endTime : "");
+  const [type, setType] = useState(event ? event.type : "flight");
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const eventData = { title, date, startTime, endTime, type };
+    if (event) {
+      onSave({ ...event, ...eventData });
+    } else {
+      onSave(eventData);
+    }
+  };
+
+  return (
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+      <div className="bg-white p-6 rounded-lg">
+        <h2 className="text-xl font-bold mb-4">
+          {event ? "Edit Event" : "Create New Event"}
+        </h2>
+        <form onSubmit={handleSubmit}>
+          <input
+            type="text"
+            placeholder="Title"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            className="w-full p-2 mb-2 border rounded"
+          />
+          <input
+            type="date"
+            value={date}
+            onChange={(e) => setDate(e.target.value)}
+            className="w-full p-2 mb-2 border rounded"
+          />
+          <input
+            type="time"
+            value={startTime}
+            onChange={(e) => setStartTime(e.target.value)}
+            className="w-full p-2 mb-2 border rounded"
+          />
+          <input
+            type="time"
+            value={endTime}
+            onChange={(e) => setEndTime(e.target.value)}
+            className="w-full p-2 mb-2 border rounded"
+          />
+          <select
+            value={type}
+            onChange={(e) => setType(e.target.value)}
+            className="w-full p-2 mb-4 border rounded"
+          >
+            <option value="flight">Flight</option>
+            <option value="bus">Bus</option>
+            <option value="hotel">Hotel</option>
+          </select>
+          <div className="flex justify-between">
+            {event && (
+              <button
+                type="button"
+                onClick={() => onDelete(event.id)}
+                className="px-4 py-2 bg-red-500 text-white rounded"
+              >
+                Delete
+              </button>
+            )}
+            <div>
+              <button
+                type="button"
+                onClick={onClose}
+                className="mr-2 px-4 py-2 bg-gray-200 rounded"
+              >
+                Cancel
+              </button>
+              <button
+                type="submit"
+                className="px-4 py-2 bg-blue-500 text-white rounded"
+              >
+                {event ? "Update" : "Add Event"}
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
+};
+
+export default EventCalendar;

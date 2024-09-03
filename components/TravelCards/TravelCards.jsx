@@ -1,0 +1,357 @@
+"use client";
+
+import React, { useState, useEffect } from "react";
+import { MoreVertical, Plus, ArrowRight, Plane } from "lucide-react";
+
+// TODO: Make Card a separate component
+const Card = ({ title, content, icon, onEdit }) => (
+  <div className="bg-white p-4 rounded-lg shadow-md">
+    <div className="flex justify-between items-center mb-4">
+      <h2 className="text-lg font-semibold text-gray-600">{title}</h2>
+      <button onClick={onEdit} className="text-gray-400 hover:text-gray-600">
+        <MoreVertical size={20} />
+      </button>
+    </div>
+    <div className="flex items-center">
+      {icon}
+      <div className="ml-3">{content}</div>
+    </div>
+  </div>
+);
+
+// TODO: Make EditModal a separate component
+const EditModal = ({ isOpen, onClose, title, children }) => {
+  if (!isOpen) return null;
+
+  return (
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+      <div className="bg-white rounded-lg shadow-xl p-6 w-full max-w-md">
+        <div className="flex justify-between items-center mb-4">
+          <h2 className="text-xl font-bold">{title}</h2>
+          <button
+            onClick={onClose}
+            className="text-gray-500 hover:text-gray-700"
+          >
+            &times;
+          </button>
+        </div>
+        {children}
+      </div>
+    </div>
+  );
+};
+
+const getFlagUrl = (countryCode) => {
+  return `https://flagcdn.com/w20/${countryCode.toLowerCase()}.png`;
+};
+
+const getCountryCode = async (countryName) => {
+  try {
+    const response = await fetch(
+      `https://restcountries.com/v3.1/name/${countryName}`
+    );
+    const data = await response.json();
+    return data[0]?.cca2.toLowerCase() || "in";
+  } catch (error) {
+    console.error("Error fetching country code:", error);
+    return "in";
+  }
+};
+
+export default function TravelCards() {
+  const [travelDate, setTravelDate] = useState({
+    start: "2021-09-01",
+    end: "2021-09-05",
+  });
+  const [people, setPeople] = useState([
+    { name: "Marta", avatar: "/placeholder.svg?height=32&width=32" },
+    { name: "Artur", avatar: "/placeholder.svg?height=32&width=32" },
+  ]);
+  const [destination, setDestination] = useState({
+    from: "Poland",
+    to: "Italy",
+    duration: "2 h 25 min",
+  });
+  const [editingCard, setEditingCard] = useState(null);
+  const [fromFlag, setFromFlag] = useState("in");
+  const [toFlag, setToFlag] = useState("in");
+
+  useEffect(() => {
+    const fetchFlags = async () => {
+      const fromCode = await getCountryCode(destination.from);
+      const toCode = await getCountryCode(destination.to);
+      setFromFlag(fromCode);
+      setToFlag(toCode);
+    };
+    fetchFlags();
+  }, [destination.from, destination.to]);
+
+  const calculateDays = (start, end) => {
+    const diffTime = Math.abs(new Date(end) - new Date(start));
+    return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+  };
+
+  const handleEdit = (cardType) => {
+    setEditingCard(cardType);
+  };
+
+  const handleCloseModal = () => {
+    setEditingCard(null);
+  };
+
+  const handleSave = (cardType, newData) => {
+    switch (cardType) {
+      case "travelDate":
+        setTravelDate(newData);
+        break;
+      case "people":
+        setPeople(newData);
+        break;
+      case "destination":
+        setDestination(newData);
+        break;
+    }
+    handleCloseModal();
+  };
+
+  return (
+    <div className="min-h-screen bg-gray-100 p-4">
+      <div className="max-w-2xl mx-auto space-y-4">
+        <Card
+          title="Travel date"
+          content={
+            <div>
+              <div className="text-3xl font-bold mb-2">
+                {calculateDays(travelDate.start, travelDate.end)} days
+              </div>
+              <div className="text-gray-600">
+                {new Date(travelDate.start).toLocaleDateString()}{" "}
+                <ArrowRight className="inline" size={16} />{" "}
+                {new Date(travelDate.end).toLocaleDateString()}
+              </div>
+            </div>
+          }
+          icon={
+            <div className="bg-blue-100 p-2 rounded-full">
+              <ArrowRight size={24} className="text-blue-500" />
+            </div>
+          }
+          onEdit={() => handleEdit("travelDate")}
+        />
+
+        <Card
+          title="People"
+          content={
+            <div>
+              <div className="text-3xl font-bold mb-2">
+                {people.length}{" "}
+                <span className="text-lg font-normal">/adults</span>
+              </div>
+              <div className="flex items-center">
+                {people.map((person, index) => (
+                  <img
+                    key={index}
+                    src={person.avatar}
+                    alt={person.name}
+                    className="w-8 h-8 rounded-full -ml-2 first:ml-0 border-2 border-white"
+                  />
+                ))}
+                <div className="ml-2">
+                  {people.map((p) => p.name).join(", ")}
+                </div>
+                <button className="ml-2 bg-gray-200 rounded-full p-1">
+                  <Plus size={16} className="text-gray-600" />
+                </button>
+              </div>
+            </div>
+          }
+          icon={
+            <div className="bg-green-100 p-2 rounded-full">
+              <Plus size={24} className="text-green-500" />
+            </div>
+          }
+          onEdit={() => handleEdit("people")}
+        />
+
+        <Card
+          title="Destination"
+          content={
+            <div>
+              <div className="text-3xl font-bold mb-2">Rome</div>
+              <div className="flex items-center text-gray-600">
+                <img
+                  src={getFlagUrl(fromFlag)}
+                  alt={`${destination.from} flag`}
+                  className="mr-1"
+                />
+                {destination.from} <ArrowRight className="mx-1" size={16} />
+                <img
+                  src={getFlagUrl(toFlag)}
+                  alt={`${destination.to} flag`}
+                  className="mr-1"
+                />
+                {destination.to}
+                <Plane className="ml-2 mr-1" size={16} />
+                {destination.duration} flight
+              </div>
+            </div>
+          }
+          icon={
+            <div className="bg-purple-100 p-2 rounded-full">
+              <Plane size={24} className="text-purple-500" />
+            </div>
+          }
+          onEdit={() => handleEdit("destination")}
+        />
+
+        <EditModal
+          isOpen={editingCard === "travelDate"}
+          onClose={handleCloseModal}
+          title="Edit Travel Date"
+        >
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              const formData = new FormData(e.target);
+              handleSave("travelDate", {
+                start: formData.get("start"),
+                end: formData.get("end"),
+              });
+            }}
+          >
+            <div className="mb-4">
+              <label className="block text-sm font-medium text-gray-700">
+                Start Date
+              </label>
+              <input
+                type="date"
+                name="start"
+                defaultValue={travelDate.start}
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                required
+              />
+            </div>
+            <div className="mb-4">
+              <label className="block text-sm font-medium text-gray-700">
+                End Date
+              </label>
+              <input
+                type="date"
+                name="end"
+                defaultValue={travelDate.end}
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                required
+              />
+            </div>
+            <button
+              type="submit"
+              className="w-full bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
+            >
+              Save
+            </button>
+          </form>
+        </EditModal>
+
+        <EditModal
+          isOpen={editingCard === "people"}
+          onClose={handleCloseModal}
+          title="Edit People"
+        >
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              const formData = new FormData(e.target);
+              const newPeople = people.map((person, index) => ({
+                ...person,
+                name: formData.get(`name-${index}`),
+              }));
+              handleSave("people", newPeople);
+            }}
+          >
+            {people.map((person, index) => (
+              <div key={index} className="mb-4">
+                <label className="block text-sm font-medium text-gray-700">
+                  Person {index + 1}
+                </label>
+                <input
+                  type="text"
+                  name={`name-${index}`}
+                  defaultValue={person.name}
+                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                  required
+                />
+              </div>
+            ))}
+            <button
+              type="submit"
+              className="w-full bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
+            >
+              Save
+            </button>
+          </form>
+        </EditModal>
+
+        <EditModal
+          isOpen={editingCard === "destination"}
+          onClose={handleCloseModal}
+          title="Edit Destination"
+        >
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              const formData = new FormData(e.target);
+              handleSave("destination", {
+                from: formData.get("from"),
+                to: formData.get("to"),
+                duration: formData.get("duration"),
+              });
+            }}
+          >
+            <div className="mb-4">
+              <label className="block text-sm font-medium text-gray-700">
+                From
+              </label>
+              <input
+                type="text"
+                name="from"
+                defaultValue={destination.from}
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                required
+              />
+            </div>
+            <div className="mb-4">
+              <label className="block text-sm font-medium text-gray-700">
+                To
+              </label>
+              <input
+                type="text"
+                name="to"
+                defaultValue={destination.to}
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                required
+              />
+            </div>
+            <div className="mb-4">
+              <label className="block text-sm font-medium text-gray-700">
+                Flight Duration
+              </label>
+              <input
+                type="text"
+                name="duration"
+                defaultValue={destination.duration}
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                required
+              />
+            </div>
+            <button
+              type="submit"
+              className="w-full bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
+            >
+              Save
+            </button>
+          </form>
+        </EditModal>
+      </div>
+    </div>
+  );
+}
