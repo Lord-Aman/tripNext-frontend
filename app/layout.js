@@ -1,5 +1,7 @@
 import "./globals.css";
 import { Sora } from "next/font/google";
+import Navbar from "@/components/Navbar/Navbar";
+import Sidebar from "@/components/Sidebar/Sidebar";
 
 const sora = Sora({
   subsets: ["latin"],
@@ -15,7 +17,15 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body className={sora.className}>{children}</body>
+      <body className={sora.className}>
+        <div className="flex h-screen">
+          <Sidebar />
+          <div className="flex flex-col flex-grow">
+            <Navbar />
+            <main className="flex-grow p-8 bg-backgroundGray">{children}</main>
+          </div>
+        </div>
+      </body>
     </html>
   );
 }

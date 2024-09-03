@@ -9,6 +9,7 @@ module.exports = {
     extend: {
       colors: {
         customBlue: "#346AFF",
+        backgroundGray: "#FAF9FF",
       },
       boxShadow: {
         custom: "0px 8px 8px rgba(52, 106, 255, 0.15)", // Custom shadow
