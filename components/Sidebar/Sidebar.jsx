@@ -11,12 +11,13 @@ import {
   Car,
   Landmark,
   HelpCircle,
+  X,
 } from "lucide-react";
 import Button from "@/components/Button/Button";
 import WeatherCard from "../Weather/WeatherCard";
 import NewTripModal from "../NewTripModal/NewTripModal";
 
-export default function Sidebar() {
+export default function Sidebar({ isOpen, onClose }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const menuItems = [
@@ -29,8 +30,17 @@ export default function Sidebar() {
   ];
 
   return (
-    <div className="w-72 h-screen bg-white p-6 m-2 rounded-md flex flex-col">
-      <Logo />
+    <div
+      className={`fixed inset-y-0 left-0 z-50 w-72 bg-white p-6 m-2 rounded-md flex flex-col transform transition-transform duration-300 ease-in-out ${
+        isOpen ? "translate-x-0" : "-translate-x-full"
+      } md:relative md:translate-x-0`}
+    >
+      <div className="flex justify-between items-center mb-6">
+        <Logo />
+        <button className="md:hidden" onClick={onClose}>
+          <X size={24} />
+        </button>
+      </div>
       <Button
         className="bg-customBlue h-12 text-white rounded-lg shadow-custom"
         text="New Trip"

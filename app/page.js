@@ -34,9 +34,6 @@ export default function Home() {
               <TodoList />
             </div>
           </div>
-
-          {/* <TravelCards /> */}
-          {/* <TodoList /> */}
         </div>
         <div className="w-full h-screen md::w-1/4 mt-8 lg:mt-0">
           <EventCalendar />
