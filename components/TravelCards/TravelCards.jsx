@@ -1,13 +1,13 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { MoreVertical, Plus, ArrowRight, Plane } from "lucide-react";
+import { MoreVertical, Plus, ArrowLeftRight, Plane } from "lucide-react";
 import Image from "next/image";
 import UserAvatar from "@/public/icons/avatar.svg";
 
 // Card Component
 const Card = ({ title, content, icon, onEdit }) => (
-  <div className="bg-white p-6 flex flex-col justify-between max-h-44 rounded-lg shadow-md">
+  <div className="bg-white p-6 flex flex-col justify-between max-h-44 rounded-lg lg:min-w-72 shadow-md">
     <div className="flex justify-between items-center mb-2">
       <h2 className="text-sm font-semibold text-gray-500">{title}</h2>
       <button onClick={onEdit} className="text-gray-400 hover:text-gray-600">
@@ -15,8 +15,7 @@ const Card = ({ title, content, icon, onEdit }) => (
       </button>
     </div>
     <div className="flex items-center flex-grow">
-      {icon}
-      <div className="ml-3 flex-1">{content}</div>
+      <div className="flex-1">{content}</div>
     </div>
   </div>
 );
@@ -116,8 +115,13 @@ export default function TravelCards() {
     handleCloseModal();
   };
 
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString("en-GB").replace(/\//g, ".");
+  };
+
   return (
-    <div className="min-h-screen w-full p-4 pr-0 flex space-x-8">
+    <div className="w-full p-4 pr-0 flex space-x-8">
       <Card
         title="Travel date"
         content={
@@ -125,19 +129,17 @@ export default function TravelCards() {
             <div className="text-4xl font-bold leading-tight mb-2">
               {calculateDays(travelDate.start, travelDate.end)} days
             </div>
-            <div className="text-sm text-gray-500">
-              01.09.2021 <ArrowRight className="inline" size={16} /> 05.09.2021
+            <div className="w-full mt-4 space-x-4 text-sm text-gray-500">
+              <span>{formatDate(travelDate.start)}</span>
+              <ArrowLeftRight className="inline" size={16} />{" "}
+              <span>{formatDate(travelDate.end)}</span>
             </div>
-          </div>
-        }
-        icon={
-          <div className="bg-blue-100 p-2 rounded-full">
-            <ArrowRight size={24} className="text-blue-500" />
           </div>
         }
         onEdit={() => handleEdit("travelDate")}
       />
 
+      {/* TODO: Add functionality to add people and show ... if there are more than two people */}
       <Card
         title="People"
         content={
@@ -146,27 +148,24 @@ export default function TravelCards() {
               {people.length}{" "}
               <span className="text-lg font-normal">/adults</span>
             </div>
-            <div className="flex items-center">
-              {people.map((person, index) => (
-                <Image
-                  key={index}
-                  src={person.avatar}
-                  alt={person.name}
-                  className="w-8 h-8 rounded-full border-2 border-white -ml-2 first:ml-0"
-                />
-              ))}
-              <div className="ml-2 text-sm text-gray-600">
-                {people.map((p) => p.name).join(", ")}
+            <div className="flex items-center justify-between">
+              <div className="flex items-center">
+                {people.map((person, index) => (
+                  <Image
+                    key={index}
+                    src={person.avatar}
+                    alt={person.name}
+                    className="w-8 h-8 rounded-full border-2 border-white -ml-2 first:ml-0"
+                  />
+                ))}
+                <div className="ml-2 text-sm text-gray-600">
+                  {people.map((p) => p.name).join(", ")}
+                </div>
               </div>
               <button className="ml-2 bg-gray-200 rounded-full p-1">
                 <Plus size={16} className="text-gray-600" />
               </button>
             </div>
-          </div>
-        }
-        icon={
-          <div className="bg-green-100 p-2 rounded-full">
-            <Plus size={24} className="text-green-500" />
           </div>
         }
         onEdit={() => handleEdit("people")}
@@ -175,23 +174,31 @@ export default function TravelCards() {
       <Card
         title="Destination"
         content={
-          <div>
-            <div className="text-4xl font-bold leading-tight mb-2">Rome</div>
-            <div className="flex items-center text-sm text-gray-600">
-              <img
-                src={getFlagUrl(fromFlag)}
-                alt={`${destination.from} flag`}
-                className="mr-1"
-              />
-              {destination.from} <ArrowRight className="mx-1" size={16} />
-              <img
-                src={getFlagUrl(toFlag)}
-                alt={`${destination.to} flag`}
-                className="mr-1"
-              />
-              {destination.to}
-              <Plane className="ml-2 mr-1" size={16} />
-              {destination.duration} flight
+          <div className="">
+            <div className="text-4xl  font-bold leading-tight mb-4">Rome</div>
+            <div className="flex space-x-4 items-center justify-center text-sm text-gray-600">
+              <div className="space-x-2 flex items-center justify-center">
+                <img
+                  src={getFlagUrl(fromFlag)}
+                  alt={`${destination.from} flag`}
+                  className="mr-2"
+                />
+                {destination.from} <ArrowLeftRight className="mx-1" size={16} />
+              </div>
+              <div className="space-x-2 flex items-center justify-center">
+                <div className="flex mr-8">
+                  <img
+                    src={getFlagUrl(toFlag)}
+                    alt={`${destination.to} flag`}
+                    className="mr-4"
+                  />
+                  {destination.to}
+                </div>
+                <div className="flex space-x-4 items-center">
+                  <Plane className="ml-2 mr-1" size={16} />
+                  {destination.duration} flight
+                </div>
+              </div>
             </div>
           </div>
         }

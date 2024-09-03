@@ -1,10 +1,10 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { MapContainer, TileLayer } from "react-leaflet";
+import { MapContainer, TileLayer, Marker, Tooltip } from "react-leaflet";
+import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 
-//TODO: Add pinpoint
 const LocationMap = ({ locationName = "Rome" }) => {
   const [center, setCenter] = useState(null);
 
@@ -36,8 +36,18 @@ const LocationMap = ({ locationName = "Rome" }) => {
     fetchCoordinates(locationName);
   }, [locationName]);
 
+  // Custom icon for the marker
+  const customIcon = new L.Icon({
+    iconUrl:
+      "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png",
+    iconSize: [25, 41],
+    iconAnchor: [12, 41],
+    popupAnchor: [1, -34],
+    shadowSize: [41, 41],
+  });
+
   return (
-    <div className="w-full h-full rounded-lg overflow-hidden">
+    <div className="w-full z-0 h-full rounded-lg overflow-hidden">
       {center ? (
         <MapContainer
           center={center}
@@ -47,6 +57,9 @@ const LocationMap = ({ locationName = "Rome" }) => {
           className="w-[300px] h-[500px] rounded-xl"
         >
           <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+          <Marker position={center} icon={customIcon}>
+            <Tooltip>{locationName}</Tooltip>
+          </Marker>
         </MapContainer>
       ) : (
         <div className="flex justify-center items-center h-[500px]">

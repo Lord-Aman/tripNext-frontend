@@ -34,7 +34,9 @@ export default function Sidebar() {
       <Button
         className="bg-customBlue h-12 text-white rounded-lg shadow-custom"
         text="New Trip"
-        onClick={() => setIsModalOpen(true)}
+        onClick={() => {
+          setIsModalOpen(true);
+        }}
       />
       <nav className="flex-grow">
         {menuItems.map((item, index) => (
@@ -49,7 +51,7 @@ export default function Sidebar() {
         href="/support"
       />
       <NewTripModal
-        isOpen={isModalOpen}
+        isModalOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
       />
     </div>

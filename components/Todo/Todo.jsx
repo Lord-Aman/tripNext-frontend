@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import { ArrowUpDown, Pencil, Trash2, GripVertical } from "lucide-react";
 import Image from "next/image";
+import UserAvatar from "@/public/icons/avatar.svg";
 
 const initialTasks = [
   {
@@ -78,17 +79,14 @@ function TodoItem({ task, index, onComplete, onEdit, onDelete }) {
             {task.taskName}
           </div>
           <div className="col-span-2 flex items-center">
-            {task.assignee === "Jane" ? (
-              <Image
-                src="/placeholder.svg"
-                width={24}
-                height={24}
-                alt={task.assignee}
-                className="rounded-full mr-2"
-              />
-            ) : (
-              task.assignee
-            )}
+            <img
+              src={`https://randomuser.me/api/portraits/men/${index + 1}.jpg`}
+              width={24}
+              height={24}
+              alt={task.assignee}
+              className="rounded-full mr-2"
+            />
+            <span>{task.assignee}</span>
           </div>
           <div className="col-span-3 flex items-center justify-between">
             <span
@@ -234,7 +232,7 @@ export default function TodoList() {
   };
 
   return (
-    <div className="max-w-4xl mx-auto p-6 bg-white rounded-lg shadow-lg">
+    <div className="max-w-4xl mx-auto p-6 bg-backgroundGray rounded-lg">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-4xl font-bold text-gray-900">To do's</h1>
         <button
@@ -252,7 +250,7 @@ export default function TodoList() {
         <div className="col-span-3">Priority</div>
       </div>
       <DragDropContext onDragEnd={onDragEnd}>
-        <Droppable droppableId="tasks">
+        <Droppable droppableId="tasks.id">
           {(provided) => (
             <ul {...provided.droppableProps} ref={provided.innerRef}>
               {tasks.map((task, index) => (

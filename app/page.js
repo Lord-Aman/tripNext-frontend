@@ -4,6 +4,7 @@ import ExpensesBubbleChart from "@/components/ExpenseBubbleChart/ExpenseBubbleCh
 import EventCalendar from "@/components/EventCalendar/EventCalendar";
 import TodoList from "@/components/Todo/Todo";
 import TravelCards from "@/components/TravelCards/TravelCards";
+import LocationMap from "@/components/LocationMap/LocationMap";
 
 export default function Home() {
   return (
@@ -23,6 +24,15 @@ export default function Home() {
           {/* Trip Cards  */}
           <div className="w-full">
             <TravelCards />
+          </div>
+
+          <div className="w-full flex space-x-8 p-4">
+            <div className="w-1/4">
+              <LocationMap />
+            </div>
+            <div className="w-3/4">
+              <TodoList />
+            </div>
           </div>
 
           {/* <TravelCards /> */}
