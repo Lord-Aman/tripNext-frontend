@@ -89,7 +89,7 @@ export default function ExpensesBubbleChart() {
         {expensesData.map((item, index) => (
           <div
             key={index}
-            className="absolute rounded-full flex items-center justify-center text-white font-bold"
+            className="absolute rounded-full  flex items-center justify-center text-white font-bold"
             style={{
               width: `${item.size}px`,
               height: `${item.size}px`,

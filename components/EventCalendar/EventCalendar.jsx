@@ -38,11 +38,13 @@ const EventCalendar = () => {
       type: "hotel",
     },
   ]);
+
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [currentDate, setCurrentDate] = useState(new Date());
   const [currentTime, setCurrentTime] = useState(new Date());
+  const [selectedDate, setSelectedDate] = useState(new Date()); // New state for selected date
 
   const timelineRef = useRef(null);
 
@@ -104,10 +106,15 @@ const EventCalendar = () => {
       <Calendar
         currentDate={currentDate}
         setCurrentDate={setCurrentDate}
+        selectedDate={selectedDate} // Pass selected date to Calendar
+        setSelectedDate={setSelectedDate} // Pass setSelectedDate function to Calendar
         events={events}
       />
       <TimelineView
-        events={events}
+        events={events.filter(
+          (event) =>
+            new Date(event.date).toDateString() === selectedDate.toDateString()
+        )} // Filter events for the selected date
         openEditModal={openEditModal}
         currentTime={currentTime}
         timelineRef={timelineRef}
@@ -140,7 +147,13 @@ const Header = ({ openCreateModal }) => (
   </header>
 );
 
-const Calendar = ({ currentDate, setCurrentDate, events }) => {
+const Calendar = ({
+  currentDate,
+  setCurrentDate,
+  selectedDate,
+  setSelectedDate,
+  events,
+}) => {
   const daysInMonth = new Date(
     currentDate.getFullYear(),
     currentDate.getMonth() + 1,
@@ -179,6 +192,25 @@ const Calendar = ({ currentDate, setCurrentDate, events }) => {
     );
   };
 
+  const today = new Date(); // Get today's date
+  const isToday = (day) =>
+    day === today.getDate() &&
+    currentDate.getMonth() === today.getMonth() &&
+    currentDate.getFullYear() === today.getFullYear();
+
+  const isSelected = (day) =>
+    day === selectedDate.getDate() &&
+    currentDate.getMonth() === selectedDate.getMonth() &&
+    currentDate.getFullYear() === selectedDate.getFullYear();
+
+  const handleDateClick = (day) => {
+    if (day) {
+      setSelectedDate(
+        new Date(currentDate.getFullYear(), currentDate.getMonth(), day)
+      );
+    }
+  };
+
   return (
     <div className="mb-6">
       <div className="flex justify-between items-center mb-4">
@@ -206,13 +238,11 @@ const Calendar = ({ currentDate, setCurrentDate, events }) => {
         {days.map((day, index) => (
           <div
             key={index}
+            onClick={() => handleDateClick(day)}
             className={`
-              h-8 w-8 flex items-center justify-center rounded-full text-sm relative
-              ${
-                day === currentDate.getDate()
-                  ? "bg-blue-500 shadow-lg text-white"
-                  : ""
-              }
+              h-8 w-8 flex items-center justify-center rounded-full text-sm relative cursor-pointer
+              ${isToday(day) ? "bg-blue-500 shadow-lg text-white" : ""}
+              ${isSelected(day) && !isToday(day) ? "bg-gray-300" : ""}
               ${day ? "text-gray-700" : "text-gray-300"}
             `}
           >

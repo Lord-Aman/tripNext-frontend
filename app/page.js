@@ -9,13 +9,22 @@ export default function Home() {
   return (
     <div className="w-full mx-auto sm:px-6 md:px-2">
       <div className="flex flex-col lg:flex-row space-x-4">
-        <div className="w-full flex items-start justify-center md:w-3/4 lg:pr-8">
-          <div className="mb-8 w-3/4">
-            <TripCarousel />
+        <div className="w-full flex flex-col items-start justify-start md:w-3/4 lg:pr-8">
+          {/* Carousel and Expenses Chart  */}
+          <div className="flex flex-row">
+            <div className="mb-8 w-3/4">
+              <TripCarousel />
+            </div>
+            <div className="mb- 8 w-1/4">
+              <ExpensesBubbleChart />
+            </div>
           </div>
-          <div className="mb- 8 w-1/4">
-            <ExpensesBubbleChart />
+
+          {/* Trip Cards  */}
+          <div className="w-full">
+            <TravelCards />
           </div>
+
           {/* <TravelCards /> */}
           {/* <TodoList /> */}
         </div>

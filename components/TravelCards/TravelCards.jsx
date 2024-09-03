@@ -2,24 +2,26 @@
 
 import React, { useState, useEffect } from "react";
 import { MoreVertical, Plus, ArrowRight, Plane } from "lucide-react";
+import Image from "next/image";
+import UserAvatar from "@/public/icons/avatar.svg";
 
-// TODO: Make Card a separate component
+// Card Component
 const Card = ({ title, content, icon, onEdit }) => (
-  <div className="bg-white p-4 rounded-lg shadow-md">
-    <div className="flex justify-between items-center mb-4">
-      <h2 className="text-lg font-semibold text-gray-600">{title}</h2>
+  <div className="bg-white p-6 flex flex-col justify-between max-h-44 rounded-lg shadow-md">
+    <div className="flex justify-between items-center mb-2">
+      <h2 className="text-sm font-semibold text-gray-500">{title}</h2>
       <button onClick={onEdit} className="text-gray-400 hover:text-gray-600">
         <MoreVertical size={20} />
       </button>
     </div>
-    <div className="flex items-center">
+    <div className="flex items-center flex-grow">
       {icon}
-      <div className="ml-3">{content}</div>
+      <div className="ml-3 flex-1">{content}</div>
     </div>
   </div>
 );
 
-// TODO: Make EditModal a separate component
+// EditModal Component
 const EditModal = ({ isOpen, onClose, title, children }) => {
   if (!isOpen) return null;
 
@@ -64,8 +66,8 @@ export default function TravelCards() {
     end: "2021-09-05",
   });
   const [people, setPeople] = useState([
-    { name: "Marta", avatar: "/placeholder.svg?height=32&width=32" },
-    { name: "Artur", avatar: "/placeholder.svg?height=32&width=32" },
+    { name: "Marta", avatar: UserAvatar },
+    { name: "Artur", avatar: UserAvatar },
   ]);
   const [destination, setDestination] = useState({
     from: "Poland",
@@ -115,243 +117,239 @@ export default function TravelCards() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 p-4">
-      <div className="max-w-2xl mx-auto space-y-4">
-        <Card
-          title="Travel date"
-          content={
-            <div>
-              <div className="text-3xl font-bold mb-2">
-                {calculateDays(travelDate.start, travelDate.end)} days
-              </div>
-              <div className="text-gray-600">
-                {new Date(travelDate.start).toLocaleDateString()}{" "}
-                <ArrowRight className="inline" size={16} />{" "}
-                {new Date(travelDate.end).toLocaleDateString()}
-              </div>
+    <div className="min-h-screen w-full p-4 pr-0 flex space-x-8">
+      <Card
+        title="Travel date"
+        content={
+          <div>
+            <div className="text-4xl font-bold leading-tight mb-2">
+              {calculateDays(travelDate.start, travelDate.end)} days
             </div>
-          }
-          icon={
-            <div className="bg-blue-100 p-2 rounded-full">
-              <ArrowRight size={24} className="text-blue-500" />
+            <div className="text-sm text-gray-500">
+              01.09.2021 <ArrowRight className="inline" size={16} /> 05.09.2021
             </div>
-          }
-          onEdit={() => handleEdit("travelDate")}
-        />
+          </div>
+        }
+        icon={
+          <div className="bg-blue-100 p-2 rounded-full">
+            <ArrowRight size={24} className="text-blue-500" />
+          </div>
+        }
+        onEdit={() => handleEdit("travelDate")}
+      />
 
-        <Card
-          title="People"
-          content={
-            <div>
-              <div className="text-3xl font-bold mb-2">
-                {people.length}{" "}
-                <span className="text-lg font-normal">/adults</span>
-              </div>
-              <div className="flex items-center">
-                {people.map((person, index) => (
-                  <img
-                    key={index}
-                    src={person.avatar}
-                    alt={person.name}
-                    className="w-8 h-8 rounded-full -ml-2 first:ml-0 border-2 border-white"
-                  />
-                ))}
-                <div className="ml-2">
-                  {people.map((p) => p.name).join(", ")}
-                </div>
-                <button className="ml-2 bg-gray-200 rounded-full p-1">
-                  <Plus size={16} className="text-gray-600" />
-                </button>
-              </div>
+      <Card
+        title="People"
+        content={
+          <div>
+            <div className="text-4xl font-bold leading-tight mb-2">
+              {people.length}{" "}
+              <span className="text-lg font-normal">/adults</span>
             </div>
-          }
-          icon={
-            <div className="bg-green-100 p-2 rounded-full">
-              <Plus size={24} className="text-green-500" />
-            </div>
-          }
-          onEdit={() => handleEdit("people")}
-        />
-
-        <Card
-          title="Destination"
-          content={
-            <div>
-              <div className="text-3xl font-bold mb-2">Rome</div>
-              <div className="flex items-center text-gray-600">
-                <img
-                  src={getFlagUrl(fromFlag)}
-                  alt={`${destination.from} flag`}
-                  className="mr-1"
+            <div className="flex items-center">
+              {people.map((person, index) => (
+                <Image
+                  key={index}
+                  src={person.avatar}
+                  alt={person.name}
+                  className="w-8 h-8 rounded-full border-2 border-white -ml-2 first:ml-0"
                 />
-                {destination.from} <ArrowRight className="mx-1" size={16} />
-                <img
-                  src={getFlagUrl(toFlag)}
-                  alt={`${destination.to} flag`}
-                  className="mr-1"
-                />
-                {destination.to}
-                <Plane className="ml-2 mr-1" size={16} />
-                {destination.duration} flight
+              ))}
+              <div className="ml-2 text-sm text-gray-600">
+                {people.map((p) => p.name).join(", ")}
               </div>
+              <button className="ml-2 bg-gray-200 rounded-full p-1">
+                <Plus size={16} className="text-gray-600" />
+              </button>
             </div>
-          }
-          icon={
-            <div className="bg-purple-100 p-2 rounded-full">
-              <Plane size={24} className="text-purple-500" />
-            </div>
-          }
-          onEdit={() => handleEdit("destination")}
-        />
+          </div>
+        }
+        icon={
+          <div className="bg-green-100 p-2 rounded-full">
+            <Plus size={24} className="text-green-500" />
+          </div>
+        }
+        onEdit={() => handleEdit("people")}
+      />
 
-        <EditModal
-          isOpen={editingCard === "travelDate"}
-          onClose={handleCloseModal}
-          title="Edit Travel Date"
-        >
-          <form
-            onSubmit={(e) => {
-              e.preventDefault();
-              const formData = new FormData(e.target);
-              handleSave("travelDate", {
-                start: formData.get("start"),
-                end: formData.get("end"),
-              });
-            }}
-          >
-            <div className="mb-4">
-              <label className="block text-sm font-medium text-gray-700">
-                Start Date
-              </label>
-              <input
-                type="date"
-                name="start"
-                defaultValue={travelDate.start}
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                required
+      <Card
+        title="Destination"
+        content={
+          <div>
+            <div className="text-4xl font-bold leading-tight mb-2">Rome</div>
+            <div className="flex items-center text-sm text-gray-600">
+              <img
+                src={getFlagUrl(fromFlag)}
+                alt={`${destination.from} flag`}
+                className="mr-1"
               />
-            </div>
-            <div className="mb-4">
-              <label className="block text-sm font-medium text-gray-700">
-                End Date
-              </label>
-              <input
-                type="date"
-                name="end"
-                defaultValue={travelDate.end}
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                required
+              {destination.from} <ArrowRight className="mx-1" size={16} />
+              <img
+                src={getFlagUrl(toFlag)}
+                alt={`${destination.to} flag`}
+                className="mr-1"
               />
+              {destination.to}
+              <Plane className="ml-2 mr-1" size={16} />
+              {destination.duration} flight
             </div>
-            <button
-              type="submit"
-              className="w-full bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
-            >
-              Save
-            </button>
-          </form>
-        </EditModal>
+          </div>
+        }
+        icon={
+          <div className="bg-purple-100 p-2 rounded-full">
+            <Plane size={24} className="text-purple-500" />
+          </div>
+        }
+        onEdit={() => handleEdit("destination")}
+      />
 
-        <EditModal
-          isOpen={editingCard === "people"}
-          onClose={handleCloseModal}
-          title="Edit People"
+      <EditModal
+        isOpen={editingCard === "travelDate"}
+        onClose={handleCloseModal}
+        title="Edit Travel Date"
+      >
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            const formData = new FormData(e.target);
+            handleSave("travelDate", {
+              start: formData.get("start"),
+              end: formData.get("end"),
+            });
+          }}
         >
-          <form
-            onSubmit={(e) => {
-              e.preventDefault();
-              const formData = new FormData(e.target);
-              const newPeople = people.map((person, index) => ({
-                ...person,
-                name: formData.get(`name-${index}`),
-              }));
-              handleSave("people", newPeople);
-            }}
+          <div className="mb-4">
+            <label className="block text-sm font-medium text-gray-700">
+              Start Date
+            </label>
+            <input
+              type="date"
+              name="start"
+              defaultValue={travelDate.start}
+              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+              required
+            />
+          </div>
+          <div className="mb-4">
+            <label className="block text-sm font-medium text-gray-700">
+              End Date
+            </label>
+            <input
+              type="date"
+              name="end"
+              defaultValue={travelDate.end}
+              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+              required
+            />
+          </div>
+          <button
+            type="submit"
+            className="w-full bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
           >
-            {people.map((person, index) => (
-              <div key={index} className="mb-4">
-                <label className="block text-sm font-medium text-gray-700">
-                  Person {index + 1}
-                </label>
-                <input
-                  type="text"
-                  name={`name-${index}`}
-                  defaultValue={person.name}
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                  required
-                />
-              </div>
-            ))}
-            <button
-              type="submit"
-              className="w-full bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
-            >
-              Save
-            </button>
-          </form>
-        </EditModal>
+            Save
+          </button>
+        </form>
+      </EditModal>
 
-        <EditModal
-          isOpen={editingCard === "destination"}
-          onClose={handleCloseModal}
-          title="Edit Destination"
+      <EditModal
+        isOpen={editingCard === "people"}
+        onClose={handleCloseModal}
+        title="Edit People"
+      >
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            const formData = new FormData(e.target);
+            const newPeople = people.map((person, index) => ({
+              ...person,
+              name: formData.get(`name-${index}`),
+            }));
+            handleSave("people", newPeople);
+          }}
         >
-          <form
-            onSubmit={(e) => {
-              e.preventDefault();
-              const formData = new FormData(e.target);
-              handleSave("destination", {
-                from: formData.get("from"),
-                to: formData.get("to"),
-                duration: formData.get("duration"),
-              });
-            }}
-          >
-            <div className="mb-4">
+          {people.map((person, index) => (
+            <div key={index} className="mb-4">
               <label className="block text-sm font-medium text-gray-700">
-                From
+                Person {index + 1}
               </label>
               <input
                 type="text"
-                name="from"
-                defaultValue={destination.from}
+                name={`name-${index}`}
+                defaultValue={person.name}
                 className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
                 required
               />
             </div>
-            <div className="mb-4">
-              <label className="block text-sm font-medium text-gray-700">
-                To
-              </label>
-              <input
-                type="text"
-                name="to"
-                defaultValue={destination.to}
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                required
-              />
-            </div>
-            <div className="mb-4">
-              <label className="block text-sm font-medium text-gray-700">
-                Flight Duration
-              </label>
-              <input
-                type="text"
-                name="duration"
-                defaultValue={destination.duration}
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                required
-              />
-            </div>
-            <button
-              type="submit"
-              className="w-full bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
-            >
-              Save
-            </button>
-          </form>
-        </EditModal>
-      </div>
+          ))}
+          <button
+            type="submit"
+            className="w-full bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
+          >
+            Save
+          </button>
+        </form>
+      </EditModal>
+
+      <EditModal
+        isOpen={editingCard === "destination"}
+        onClose={handleCloseModal}
+        title="Edit Destination"
+      >
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            const formData = new FormData(e.target);
+            handleSave("destination", {
+              from: formData.get("from"),
+              to: formData.get("to"),
+              duration: formData.get("duration"),
+            });
+          }}
+        >
+          <div className="mb-4">
+            <label className="block text-sm font-medium text-gray-700">
+              From
+            </label>
+            <input
+              type="text"
+              name="from"
+              defaultValue={destination.from}
+              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+              required
+            />
+          </div>
+          <div className="mb-4">
+            <label className="block text-sm font-medium text-gray-700">
+              To
+            </label>
+            <input
+              type="text"
+              name="to"
+              defaultValue={destination.to}
+              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+              required
+            />
+          </div>
+          <div className="mb-4">
+            <label className="block text-sm font-medium text-gray-700">
+              Flight Duration
+            </label>
+            <input
+              type="text"
+              name="duration"
+              defaultValue={destination.duration}
+              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+              required
+            />
+          </div>
+          <button
+            type="submit"
+            className="w-full bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
+          >
+            Save
+          </button>
+        </form>
+      </EditModal>
     </div>
   );
 }
