@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import { MapContainer, TileLayer, Marker, Tooltip } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
+import "./LocationMap.css";
 
 const LocationMap = ({ locationName = "Rome" }) => {
   const [center, setCenter] = useState(null);
@@ -47,7 +48,7 @@ const LocationMap = ({ locationName = "Rome" }) => {
   });
 
   return (
-    <div className="w-full z-0 h-full rounded-lg overflow-hidden">
+    <div className="w-full h-full rounded-lg overflow-hidden">
       {center ? (
         <MapContainer
           center={center}
