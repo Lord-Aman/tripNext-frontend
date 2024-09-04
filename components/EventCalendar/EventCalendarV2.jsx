@@ -11,7 +11,7 @@ import {
   Home,
 } from "lucide-react";
 
-const EventCalendar = () => {
+const EventCalendarV2 = () => {
   const [events, setEvents] = useState([
     {
       id: "1",
@@ -27,7 +27,7 @@ const EventCalendar = () => {
       date: "2023-09-17",
       startTime: "09:30",
       endTime: "10:00",
-      type: "bus",
+      type: "others",
     },
     {
       id: "3",
@@ -459,4 +459,4 @@ const EventModal = ({ event, onClose, onSave, onDelete }) => {
   );
 };
 
-export default EventCalendar;
+export default EventCalendarV2;

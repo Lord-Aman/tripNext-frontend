@@ -5,6 +5,7 @@ import EventCalendar from "@/components/EventCalendar/EventCalendar";
 import TodoList from "@/components/Todo/Todo";
 import TravelCards from "@/components/TravelCards/TravelCards";
 import LocationMap from "@/components/LocationMap/LocationMap";
+import EventCalendarV2 from "@/components/EventCalendar/EventCalendarV2";
 
 export default function Home() {
   return (
