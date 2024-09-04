@@ -110,8 +110,8 @@ export default function TravelCards() {
   };
 
   return (
-    <div className="w-full p-4 pr-0 flex ">
-      <div className="w-full p-4 gap-8 container mx-auto grid grid-cols-1 md:grid-cols-2 ">
+    <div className="w-full pr-0 flex ">
+      <div className="w-full p-4 gap-4 container mx-auto grid grid-cols-1 md:grid-cols-2 ">
         <div className="grid gap-4 grid-cols-2 md:grid-cols-2 lg:grid-cols-2">
           <Card
             title="Travel date"
@@ -147,9 +147,7 @@ export default function TravelCards() {
                       index < 4 ? (
                         <Image
                           key={index}
-                          src={`https://randomuser.me/api/portraits/men/${
-                            index + 1
-                          }.jpg`}
+                          src={UserAvatar}
                           alt={person[index]}
                           height={36}
                           width={36}
@@ -186,28 +184,30 @@ export default function TravelCards() {
                 <div className="text-4xl font-bold leading-tight mb-4">
                   {destination.to}
                 </div>
-                <div className="flex space-x-4 items-center justify-center text-sm text-gray-600">
-                  <div className="space-x-2 flex items-center justify-center">
-                    <img
-                      src={getFlagUrl(fromFlag)}
-                      alt={`${destination.from} flag`}
-                      className="mr-2"
-                    />
-                    {destination.from}{" "}
-                    <ArrowLeftRight className="mx-1" size={16} />
-                  </div>
-                  <div className="space-x-2 flex items-center justify-center">
-                    <div className="flex mr-8">
+                <div className="flex items-center justify-between space-x-4 text-sm text-gray-600">
+                  <div className="flex space-x-4  justify-between">
+                    <div className="space-x-2 flex items-center ">
                       <img
-                        src={getFlagUrl(toFlag)}
-                        alt={`${destination.to} flag`}
-                        className="mr-4"
+                        src={getFlagUrl(fromFlag)}
+                        alt={`${destination.from} flag`}
+                        className="mr-2"
                       />
-                      {destination.to}
+                      {destination.from}{" "}
+                      <ArrowLeftRight className="mx-1" size={16} />
                     </div>
-                    <div className="flex space-x-4 items-center">
-                      <Plane className="ml-2 mr-1" size={16} />2 h 25 min flight
+                    <div className="space-x-2 flex items-center justify-center">
+                      <div className="flex mr-8">
+                        <img
+                          src={getFlagUrl(toFlag)}
+                          alt={`${destination.to} flag`}
+                          className="mr-4"
+                        />
+                        {destination.to}
+                      </div>
                     </div>
+                  </div>
+                  <div className="flex space-x-4 items-center">
+                    <Plane className="ml-2 mr-1" size={16} />2 h 25 min flight
                   </div>
                 </div>
               </div>
