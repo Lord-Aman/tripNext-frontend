@@ -20,32 +20,39 @@ export default function TravelCards() {
   const params = useParams();
   const tripId = params.tripId; // Fetch the tripId from the URL
   const { tripsData } = useTripContext();
-  const { trips, loading } = tripsData; // Assuming tripsData contains a loading state
+  const { trips, updateTrip, loading } = tripsData; // Assuming tripsData contains a loading state
 
   // Find the trip by tripId
   const trip = trips.find((trip) => trip._id == tripId);
 
   const [travelDate, setTravelDate] = useState({
-    start: "2021-09-01",
-    end: "2021-09-05",
+    start: "2024-06-01",
+    end: "2024-06-01",
   });
-  const [people, setPeople] = useState([{ name: "Marta", avatar: UserAvatar }]);
+  const [people, setPeople] = useState([]);
   const [destination, setDestination] = useState({
-    from: "Poland",
-    to: "Italy",
-    duration: "2 h 25 min",
+    from: "",
+    to: "",
   });
   const [editingCard, setEditingCard] = useState(null);
   const [fromFlag, setFromFlag] = useState("in");
   const [toFlag, setToFlag] = useState("in");
 
   useEffect(() => {
+    // Ensure that from and to values are present before fetching flags
     const fetchFlags = async () => {
-      const fromCode = await getCountryCode(destination.from);
-      const toCode = await getCountryCode(destination.to);
-      setFromFlag(fromCode);
-      setToFlag(toCode);
+      if (destination.from && destination.to) {
+        try {
+          const fromCode = await getCountryCode(destination.from);
+          const toCode = await getCountryCode(destination.to);
+          setFromFlag(fromCode);
+          setToFlag(toCode);
+        } catch (error) {
+          console.error("Error fetching country flags:", error);
+        }
+      }
     };
+
     fetchFlags();
   }, [destination.from, destination.to]);
 
@@ -56,12 +63,12 @@ export default function TravelCards() {
         end: formatDateFromISO(trip.endDate),
       });
 
-      const participants = trip.participants.map((participant, index) => ({
-        name: participant?.split(" ")[0],
-        avatar: `https://randomuser.me/api/portraits/men/${index + 1}.jpg`,
-      }));
+      setPeople(trip.participants);
 
-      setPeople(participants);
+      setDestination({
+        from: trip.sourceCountry,
+        to: trip.destinationCountry,
+      });
     }
   }, [trip]);
 
@@ -76,12 +83,26 @@ export default function TravelCards() {
   const handleSave = (cardType, newData) => {
     switch (cardType) {
       case "travelDate":
+        updateTrip(tripId, {
+          ...trip,
+          startDate: newData.start,
+          endDate: newData.end,
+        });
         setTravelDate(newData);
         break;
       case "people":
+        updateTrip(tripId, {
+          ...trip,
+          participants: newData,
+        });
         setPeople(newData);
         break;
       case "destination":
+        updateTrip(tripId, {
+          ...trip,
+          sourceCountry: newData.from,
+          destinationCountry: newData.to,
+        });
         setDestination(newData);
         break;
     }
@@ -97,7 +118,10 @@ export default function TravelCards() {
             content={
               <div>
                 <div className="text-4xl font-bold leading-tight mb-2 w-full">
-                  {calculateDays(travelDate.start, travelDate.end)} days
+                  {loading
+                    ? 0
+                    : calculateDays(travelDate.start, travelDate.end)}{" "}
+                  days
                 </div>
                 <div className="w-full mt-4 space-x-4 text-sm text-gray-500">
                   <span>{formatDate(travelDate.start)}</span>
@@ -119,18 +143,29 @@ export default function TravelCards() {
                 </div>
                 <div className="flex items-center justify-between">
                   <div className="flex items-center">
-                    {people.map((person, index) => (
-                      <Image
-                        key={index}
-                        src={person.avatar}
-                        alt={person.name}
-                        height={48}
-                        width={48}
-                        className="rounded-full border-2 border-white -ml-2 first:ml-0"
-                      />
-                    ))}
+                    {people.map((person, index) =>
+                      index < 4 ? (
+                        <Image
+                          key={index}
+                          src={`https://randomuser.me/api/portraits/men/${
+                            index + 1
+                          }.jpg`}
+                          alt={person[index]}
+                          height={36}
+                          width={36}
+                          className="rounded-full border-2 border-white -ml-2 first:ml-0"
+                        />
+                      ) : (
+                        ""
+                      )
+                    )}
                     <div className="ml-2 text-sm text-gray-600">
-                      {people.map((p) => p.name).join(", ")}
+                      {people.length > 2
+                        ? `${people
+                            .slice(0, 2)
+                            .map((p) => p)
+                            .join(", ")}...`
+                        : people.map((p) => p).join(", ")}
                     </div>
                   </div>
                   <button className="ml-2 bg-gray-200 rounded-full p-1">
@@ -149,7 +184,7 @@ export default function TravelCards() {
             content={
               <div className="">
                 <div className="text-4xl font-bold leading-tight mb-4">
-                  Rome
+                  {destination.to}
                 </div>
                 <div className="flex space-x-4 items-center justify-center text-sm text-gray-600">
                   <div className="space-x-2 flex items-center justify-center">
@@ -171,8 +206,7 @@ export default function TravelCards() {
                       {destination.to}
                     </div>
                     <div className="flex space-x-4 items-center">
-                      <Plane className="ml-2 mr-1" size={16} />
-                      {destination.duration} flight
+                      <Plane className="ml-2 mr-1" size={16} />2 h 25 min flight
                     </div>
                   </div>
                 </div>
@@ -244,10 +278,9 @@ export default function TravelCards() {
           onSubmit={(e) => {
             e.preventDefault();
             const formData = new FormData(e.target);
-            const newPeople = people.map((person, index) => ({
-              ...person,
-              name: formData.get(`name-${index}`),
-            }));
+            const newPeople = people.map((_, index) =>
+              formData.get(`name-${index}`)
+            ); // Only map names directly
             handleSave("people", newPeople);
           }}
         >
@@ -259,7 +292,7 @@ export default function TravelCards() {
               <input
                 type="text"
                 name={`name-${index}`}
-                defaultValue={person.name}
+                defaultValue={person}
                 className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
                 required
               />
@@ -318,13 +351,6 @@ export default function TravelCards() {
             <label className="block text-sm font-medium text-gray-700">
               Flight Duration
             </label>
-            <input
-              type="text"
-              name="duration"
-              defaultValue={destination.duration}
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-              required
-            />
           </div>
           <button
             type="submit"
