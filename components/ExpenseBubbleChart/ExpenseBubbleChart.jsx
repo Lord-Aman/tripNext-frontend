@@ -83,13 +83,13 @@ function darkenColor(color, amount) {
 
 export default function ExpensesBubbleChart() {
   return (
-    <div className="bg-backgroundGray min-w-72 max-h-80 p-6 m-4 rounded-lg max-w-md mx-auto">
-      <h2 className="text-base font-normal text-gray-400 ">Expenses</h2>
-      <div className="relative h-56 mb-2">
+    <div className="bg-backgroundGray w-full md:w-full max-h-80 p-6 m-4 rounded-lg max-w-md mx-auto">
+      <h2 className="text-base font-normal text-gray-400 mb-4">Expenses</h2>
+      <div className="relative h-56 mb-4">
         {expensesData.map((item, index) => (
           <div
             key={index}
-            className="absolute rounded-full  flex items-center justify-center text-white font-bold"
+            className="absolute rounded-full flex items-center justify-center text-white font-bold"
             style={{
               width: `${item.size}px`,
               height: `${item.size}px`,
@@ -97,9 +97,8 @@ export default function ExpensesBubbleChart() {
               left: item.left,
               fontSize: `${item.size / 6}px`,
               transform: "translate(-50%, -50%)",
-              background: `radial-gradient(circle at 30% 30%, ${
-                item.color
-              }, ${darkenColor(item.color, 30)})`,
+              background: `radial-gradient(circle at 30% 30%, ${item.color
+                }, ${darkenColor(item.color, 30)})`,
               opacity: 0.9,
               zIndex: 3 - index,
             }}
@@ -108,9 +107,9 @@ export default function ExpensesBubbleChart() {
           </div>
         ))}
       </div>
-      <div className="flex justify-start space-x-6">
+      <div className="flex flex-wrap justify-start space-x-4">
         {expensesData.map((item, index) => (
-          <div key={index} className="flex items-center">
+          <div key={index} className="flex items-center mb-2">
             <div
               className="w-3 h-3 rounded-full mr-2"
               style={{ backgroundColor: item.color }}

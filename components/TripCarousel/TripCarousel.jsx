@@ -35,9 +35,11 @@ export default function TripCarousel() {
 
   return (
     <div
-      className="max-w-3xl mt-4 bg-cover h-80 mx-auto relative"
+      className={`${isMobile ? "max-w-1/2 h-64" : "max-w-3xl h-80"
+        } mt-4 bg-cover mx-auto relative`}
       style={{
         backgroundImage: `url(${trips[cardIndex].image.src})`,
+        backgroundSize: isMobile ? "contain" : "cover",
       }}
     >
       <Swiper
@@ -55,11 +57,16 @@ export default function TripCarousel() {
           disableOnInteraction: false,
         }}
       >
-        {trips.map((trip, index) => (
+        {trips.map((trip) => (
           <SwiperSlide key={trip.id}>
-            <div className="flex flex-col items-start justify-center h-full rounded-3xl mt-10 p-8 w-full">
-              <h2 className="text-lg font-medium mb-4">Nearest trip</h2>
-              <h1 className="text-6xl font-bold">{trip.name}</h1>
+            <div
+              className={`flex flex-col items-start justify-center h-full rounded-3xl ${isMobile ? "p-4" : "p-8"
+                } w-full`}
+            >
+              <h2 className="text-sm font-medium mb-2 sm:text-lg">
+                Nearest trip
+              </h2>
+              <h1 className="text-3xl font-bold sm:text-6xl">{trip.name}</h1>
             </div>
           </SwiperSlide>
         ))}
@@ -69,14 +76,14 @@ export default function TripCarousel() {
         <div className="absolute bottom-8 left-8 flex space-x-4">
           {/* Previous Button */}
           <button
-            className={`custom-prev flex items-center justify-center w-10 h-10 rounded-full "bg-white shadow-lg"`}
+            className="custom-prev flex items-center justify-center w-10 h-10 rounded-full bg-white shadow-lg"
           >
             <Image src={ArrowLeft} alt="Previous" />
           </button>
 
           {/* Next Button */}
           <button
-            className={`custom-next flex items-center justify-center w-10 h-10 rounded-full "bg-white shadow-lg`}
+            className="custom-next flex items-center justify-center w-10 h-10 rounded-full bg-white shadow-lg"
           >
             <Image src={ArrowRight} alt="Next" />
           </button>

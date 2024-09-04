@@ -54,7 +54,7 @@ const LocationMap = ({ locationName = "Rome" }) => {
           zoom={14}
           zoomControl={false}
           scrollWheelZoom={true}
-          className="w-[300px] h-[500px] rounded-xl"
+          className="w-full h-[500px] md:w-[300px] md:h-[500px] rounded-xl"
         >
           <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
           <Marker position={center} icon={customIcon}>

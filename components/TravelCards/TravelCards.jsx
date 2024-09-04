@@ -122,94 +122,99 @@ export default function TravelCards() {
 
   return (
     <div className="w-full p-4 pr-0 flex space-x-8">
-      <Card
-        title="Travel date"
-        content={
-          <div>
-            <div className="text-4xl font-bold leading-tight mb-2">
-              {calculateDays(travelDate.start, travelDate.end)} days
-            </div>
-            <div className="w-full mt-4 space-x-4 text-sm text-gray-500">
-              <span>{formatDate(travelDate.start)}</span>
-              <ArrowLeftRight className="inline" size={16} />{" "}
-              <span>{formatDate(travelDate.end)}</span>
-            </div>
-          </div>
-        }
-        onEdit={() => handleEdit("travelDate")}
-      />
-
-      {/* TODO: Add functionality to add people and show ... if there are more than two people */}
-      <Card
-        title="People"
-        content={
-          <div>
-            <div className="text-4xl font-bold leading-tight mb-2">
-              {people.length}{" "}
-              <span className="text-lg font-normal">/adults</span>
-            </div>
-            <div className="flex items-center justify-between">
-              <div className="flex items-center">
-                {people.map((person, index) => (
-                  <Image
-                    key={index}
-                    src={person.avatar}
-                    alt={person.name}
-                    className="w-8 h-8 rounded-full border-2 border-white -ml-2 first:ml-0"
-                  />
-                ))}
-                <div className="ml-2 text-sm text-gray-600">
-                  {people.map((p) => p.name).join(", ")}
+      <div className="w-full p-4 gap-8 container mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2">
+        <div className="grid gap-4 grid-cols-2 md:grid-cols-2 lg:grid-cols-2">
+          <Card
+            title="Travel date"
+            content={
+              <div>
+                <div className="text-4xl font-bold leading-tight mb-2 w-full">
+                  {calculateDays(travelDate.start, travelDate.end)} days
+                </div>
+                <div className="w-full mt-4 space-x-4 text-sm text-gray-500">
+                  <span>{formatDate(travelDate.start)}</span>
+                  <ArrowLeftRight className="inline" size={16} />{" "}
+                  <span>{formatDate(travelDate.end)}</span>
                 </div>
               </div>
-              <button className="ml-2 bg-gray-200 rounded-full p-1">
-                <Plus size={16} className="text-gray-600" />
-              </button>
-            </div>
-          </div>
-        }
-        onEdit={() => handleEdit("people")}
-      />
+            }
+            onEdit={() => handleEdit("travelDate")}
+          />
 
-      <Card
-        title="Destination"
-        content={
-          <div className="">
-            <div className="text-4xl  font-bold leading-tight mb-4">Rome</div>
-            <div className="flex space-x-4 items-center justify-center text-sm text-gray-600">
-              <div className="space-x-2 flex items-center justify-center">
-                <img
-                  src={getFlagUrl(fromFlag)}
-                  alt={`${destination.from} flag`}
-                  className="mr-2"
-                />
-                {destination.from} <ArrowLeftRight className="mx-1" size={16} />
-              </div>
-              <div className="space-x-2 flex items-center justify-center">
-                <div className="flex mr-8">
-                  <img
-                    src={getFlagUrl(toFlag)}
-                    alt={`${destination.to} flag`}
-                    className="mr-4"
-                  />
-                  {destination.to}
+          {/* TODO: Add functionality to add people and show ... if there are more than two people */}
+          <Card
+            title="People"
+            content={
+              <div>
+                <div className="text-4xl font-bold leading-tight mb-2">
+                  {people.length}{" "}
+                  <span className="text-lg font-normal">/adults</span>
                 </div>
-                <div className="flex space-x-4 items-center">
-                  <Plane className="ml-2 mr-1" size={16} />
-                  {destination.duration} flight
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center">
+                    {people.map((person, index) => (
+                      <Image
+                        key={index}
+                        src={person.avatar}
+                        alt={person.name}
+                        className="w-8 h-8 rounded-full border-2 border-white -ml-2 first:ml-0"
+                      />
+                    ))}
+                    <div className="ml-2 text-sm text-gray-600">
+                      {people.map((p) => p.name).join(", ")}
+                    </div>
+                  </div>
+                  <button className="ml-2 bg-gray-200 rounded-full p-1">
+                    <Plus size={16} className="text-gray-600" />
+                  </button>
                 </div>
               </div>
-            </div>
-          </div>
-        }
-        icon={
-          <div className="bg-purple-100 p-2 rounded-full">
-            <Plane size={24} className="text-purple-500" />
-          </div>
-        }
-        onEdit={() => handleEdit("destination")}
-      />
+            }
+            onEdit={() => handleEdit("people")}
+          />
+        </div>
 
+        <div className="grid gap-4 grid-cols-1 md:grid-cols-1 lg:grid-cols-1">
+          <Card
+            title="Destination"
+            content={
+              <div className="">
+                <div className="text-4xl font-bold leading-tight mb-4">Rome</div>
+                <div className="flex space-x-4 items-center justify-center text-sm text-gray-600">
+                  <div className="space-x-2 flex items-center justify-center">
+                    <img
+                      src={getFlagUrl(fromFlag)}
+                      alt={`${destination.from} flag`}
+                      className="mr-2"
+                    />
+                    {destination.from} <ArrowLeftRight className="mx-1" size={16} />
+                  </div>
+                  <div className="space-x-2 flex items-center justify-center">
+                    <div className="flex mr-8">
+                      <img
+                        src={getFlagUrl(toFlag)}
+                        alt={`${destination.to} flag`}
+                        className="mr-4"
+                      />
+                      {destination.to}
+                    </div>
+                    <div className="flex space-x-4 items-center">
+                      <Plane className="ml-2 mr-1" size={16} />
+                      {destination.duration} flight
+                    </div>
+                  </div>
+                </div>
+              </div>
+            }
+            icon={
+              <div className="bg-purple-100 p-2 rounded-full">
+                <Plane size={24} className="text-purple-500" />
+              </div>
+            }
+            onEdit={() => handleEdit("destination")}
+          />
+        </div>
+      </div>
       <EditModal
         isOpen={editingCard === "travelDate"}
         onClose={handleCloseModal}
