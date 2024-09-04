@@ -61,7 +61,7 @@ export default function Sidebar({ isOpen, onClose }) {
         href="/support"
       />
       <NewTripModal
-        isModalOpen={isModalOpen}
+        isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
       />
     </div>

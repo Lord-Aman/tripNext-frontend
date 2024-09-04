@@ -1,263 +1,229 @@
 "use client";
 
 import React, { useState } from "react";
-import { X, Plus, User } from "lucide-react";
+import {
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalBody,
+  ModalCloseButton,
+  Button,
+  FormControl,
+  FormLabel,
+  Input,
+  Select,
+  VStack,
+  HStack,
+  Box,
+  IconButton,
+} from "@chakra-ui/react";
+import { ChakraProvider } from "@chakra-ui/react";
+import DatePicker from "react-datepicker";
+import { X, Plus, Trash } from "lucide-react";
+import "react-datepicker/dist/react-datepicker.css";
 
-const ExpenseTypeSelect = ({ value, onChange }) => (
-  <select
-    value={value}
-    onChange={(e) => onChange(e.target.value)}
-    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-  >
-    <option value="transport">Transport</option>
-    <option value="hotel">Hotel</option>
-    <option value="other">Other</option>
-  </select>
-);
+export default function TripModal({ isOpen, onClose }) {
+  const [tripName, setTripName] = useState("");
+  const [sourceCountry, setSourceCountry] = useState("");
+  const [destinationCountry, setDestinationCountry] = useState("");
+  const [startDate, setStartDate] = useState(new Date());
+  const [endDate, setEndDate] = useState(new Date());
+  const [participants, setParticipants] = useState([""]);
+  const [expenses, setExpenses] = useState([
+    { category: "transport", amount: "" },
+  ]);
 
-export default function NewTripModal({ isModalOpen }) {
-  const [tripData, setTripData] = useState({
-    name: "",
-    sourceCountry: "",
-    destinationCountry: "",
-    startDate: "",
-    endDate: "",
-    participants: [],
-    expenses: [{ type: "transport", amount: 0 }],
-  });
-
-  const handleInputChange = (e) => {
-    setTripData({ ...tripData, [e.target.name]: e.target.value });
+  const handleAddParticipant = () => {
+    setParticipants([...participants, ""]);
   };
 
-  const addParticipant = () => {
-    setTripData({
-      ...tripData,
-      participants: [...tripData.participants, { id: Date.now(), name: "" }],
-    });
+  const handleParticipantChange = (index, value) => {
+    const newParticipants = [...participants];
+    newParticipants[index] = value;
+    setParticipants(newParticipants);
   };
 
-  const updateParticipant = (id, name) => {
-    setTripData({
-      ...tripData,
-      participants: tripData.participants.map((p) =>
-        p.id === id ? { ...p, name } : p
-      ),
-    });
+  const handleRemoveParticipant = (index) => {
+    const newParticipants = participants.filter((_, i) => i !== index);
+    setParticipants(newParticipants);
   };
 
-  const removeParticipant = (id) => {
-    setTripData({
-      ...tripData,
-      participants: tripData.participants.filter((p) => p.id !== id),
-    });
+  const handleAddExpense = () => {
+    setExpenses([...expenses, { category: "transport", amount: "" }]);
   };
 
-  const addExpense = () => {
-    setTripData({
-      ...tripData,
-      expenses: [...tripData.expenses, { type: "transport", amount: 0 }],
-    });
+  const handleExpenseChange = (index, field, value) => {
+    const newExpenses = [...expenses];
+    newExpenses[index][field] = value;
+    setExpenses(newExpenses);
   };
 
-  const updateExpense = (index, field, value) => {
-    const newExpenses = [...tripData.expenses];
-    newExpenses[index] = { ...newExpenses[index], [field]: value };
-    setTripData({ ...tripData, expenses: newExpenses });
-  };
-
-  const removeExpense = (index) => {
-    setTripData({
-      ...tripData,
-      expenses: tripData.expenses.filter((_, i) => i !== index),
-    });
+  const handleRemoveExpense = (index) => {
+    const newExpenses = expenses.filter((_, i) => i !== index);
+    setExpenses(newExpenses);
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("New Trip Data:", tripData);
-    setIsModalOpen(false);
+    console.log({
+      tripName,
+      sourceCountry,
+      destinationCountry,
+      startDate,
+      endDate,
+      participants,
+      expenses,
+    });
+    onClose();
   };
 
   return (
-    <div className="p-4">
-      {isModalOpen && (
-        <div className="fixed z-50 inset-0 bg-black bg-opacity-50 w-full h-full flex items-center justify-center p-4">
-          <div className="bg-white rounded-lg shadow-xl p-6 w-full max-w-2xl max-h-[90vh] overflow-y-auto">
-            <div className="flex justify-between items-center mb-4">
-              <h2 className="text-2xl font-bold">New Trip</h2>
-              <button
-                onClick={() => setIsModalOpen(false)}
-                className="text-gray-500 hover:text-gray-700"
-              >
-                <X size={24} />
-              </button>
-            </div>
+    <ChakraProvider>
+      <Modal isOpen={isOpen} onClose={onClose} size="xl">
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Add New Trip</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
             <form onSubmit={handleSubmit}>
-              <div className="space-y-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700">
-                    Trip Name
-                  </label>
-                  <input
-                    type="text"
-                    name="name"
-                    value={tripData.name}
-                    onChange={handleInputChange}
-                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+              <VStack spacing={4}>
+                <FormControl>
+                  <FormLabel htmlFor="tripName">Trip Name</FormLabel>
+                  <Input
+                    id="tripName"
+                    value={tripName}
+                    onChange={(e) => setTripName(e.target.value)}
                     required
                   />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700">
-                    Source Country
-                  </label>
-                  <input
-                    type="text"
-                    name="sourceCountry"
-                    value={tripData.sourceCountry}
-                    onChange={handleInputChange}
-                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                </FormControl>
+                <FormControl>
+                  <FormLabel htmlFor="sourceCountry">Source Country</FormLabel>
+                  <Input
+                    id="sourceCountry"
+                    value={sourceCountry}
+                    onChange={(e) => setSourceCountry(e.target.value)}
                     required
                   />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700">
+                </FormControl>
+                <FormControl>
+                  <FormLabel htmlFor="destinationCountry">
                     Destination Country
-                  </label>
-                  <input
-                    type="text"
-                    name="destinationCountry"
-                    value={tripData.destinationCountry}
-                    onChange={handleInputChange}
-                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                  </FormLabel>
+                  <Input
+                    id="destinationCountry"
+                    value={destinationCountry}
+                    onChange={(e) => setDestinationCountry(e.target.value)}
                     required
                   />
-                </div>
-                <div className="flex space-x-4">
-                  <div className="flex-1">
-                    <label className="block text-sm font-medium text-gray-700">
-                      Start Date
-                    </label>
-                    <input
-                      type="date"
-                      name="startDate"
-                      value={tripData.startDate}
-                      onChange={handleInputChange}
-                      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                </FormControl>
+                <HStack width="100%">
+                  <FormControl>
+                    <FormLabel htmlFor="startDate">Start Date</FormLabel>
+                    <DatePicker
+                      id="startDate"
+                      selected={startDate}
+                      onChange={(date) => setStartDate(date)}
+                      customInput={<Input />}
                       required
                     />
-                  </div>
-                  <div className="flex-1">
-                    <label className="block text-sm font-medium text-gray-700">
-                      End Date
-                    </label>
-                    <input
-                      type="date"
-                      name="endDate"
-                      value={tripData.endDate}
-                      onChange={handleInputChange}
-                      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                  </FormControl>
+                  <FormControl>
+                    <FormLabel htmlFor="endDate">End Date</FormLabel>
+                    <DatePicker
+                      id="endDate"
+                      selected={endDate}
+                      onChange={(date) => setEndDate(date)}
+                      customInput={<Input />}
                       required
                     />
-                  </div>
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700">
-                    Participants
-                  </label>
-                  {tripData.participants.map((participant, index) => (
-                    <div
-                      key={participant.id}
-                      className="flex items-center space-x-2 mt-2"
+                  </FormControl>
+                </HStack>
+                <FormControl>
+                  <FormLabel>Participants</FormLabel>
+                  <VStack spacing={2}>
+                    {participants.map((participant, index) => (
+                      <HStack key={index} width="100%">
+                        <Input
+                          value={participant}
+                          onChange={(e) =>
+                            handleParticipantChange(index, e.target.value)
+                          }
+                          required
+                        />
+                        <IconButton
+                          aria-label="Remove participant"
+                          icon={<Trash size={20} />}
+                          onClick={() => handleRemoveParticipant(index)}
+                          colorScheme="red"
+                        />
+                      </HStack>
+                    ))}
+                    <Button
+                      leftIcon={<Plus size={16} />}
+                      onClick={handleAddParticipant}
+                      colorScheme="blue"
                     >
-                      <User size={24} className="text-gray-400" />
-                      <input
-                        type="text"
-                        value={participant.name}
-                        onChange={(e) =>
-                          updateParticipant(participant.id, e.target.value)
-                        }
-                        className="flex-1 rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                        placeholder={`Participant ${index + 1}`}
-                        required
-                      />
-                      <button
-                        type="button"
-                        onClick={() => removeParticipant(participant.id)}
-                        className="text-red-500 hover:text-red-700"
-                      >
-                        <X size={20} />
-                      </button>
-                    </div>
-                  ))}
-                  <button
-                    type="button"
-                    onClick={addParticipant}
-                    className="mt-2 flex items-center text-indigo-600 hover:text-indigo-800"
-                  >
-                    <Plus size={20} className="mr-1" /> Add Participant
-                  </button>
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700">
-                    Expenses
-                  </label>
-                  {tripData.expenses.map((expense, index) => (
-                    <div
-                      key={index}
-                      className="flex items-center space-x-2 mt-2"
+                      Add Participant
+                    </Button>
+                  </VStack>
+                </FormControl>
+                <FormControl>
+                  <FormLabel>Expenses</FormLabel>
+                  <VStack spacing={2}>
+                    {expenses.map((expense, index) => (
+                      <HStack key={index} width="100%">
+                        <Select
+                          value={expense.category}
+                          onChange={(e) =>
+                            handleExpenseChange(
+                              index,
+                              "category",
+                              e.target.value
+                            )
+                          }
+                          required
+                        >
+                          <option value="transport">Transport</option>
+                          <option value="hotel">Hotel</option>
+                          <option value="others">Others</option>
+                        </Select>
+                        <Input
+                          type="number"
+                          value={expense.amount}
+                          onChange={(e) =>
+                            handleExpenseChange(index, "amount", e.target.value)
+                          }
+                          placeholder="Amount"
+                          required
+                        />
+                        <IconButton
+                          aria-label="Remove expense"
+                          icon={<Trash size={20} />}
+                          onClick={() => handleRemoveExpense(index)}
+                          colorScheme="red"
+                        />
+                      </HStack>
+                    ))}
+                    <Button
+                      leftIcon={<Plus size={16} />}
+                      onClick={handleAddExpense}
+                      colorScheme="blue"
                     >
-                      <ExpenseTypeSelect
-                        value={expense.type}
-                        onChange={(value) =>
-                          updateExpense(index, "type", value)
-                        }
-                      />
-                      <input
-                        type="number"
-                        value={expense.amount}
-                        onChange={(e) =>
-                          updateExpense(
-                            index,
-                            "amount",
-                            parseFloat(e.target.value)
-                          )
-                        }
-                        className="flex-1 rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                        placeholder="Amount"
-                        required
-                      />
-                      <button
-                        type="button"
-                        onClick={() => removeExpense(index)}
-                        className="text-red-500 hover:text-red-700"
-                      >
-                        <X size={20} />
-                      </button>
-                    </div>
-                  ))}
-                  <button
-                    type="button"
-                    onClick={addExpense}
-                    className="mt-2 flex items-center text-indigo-600 hover:text-indigo-800"
-                  >
-                    <Plus size={20} className="mr-1" /> Add Expense
-                  </button>
-                </div>
-              </div>
-              <div className="mt-6">
-                <button
-                  type="submit"
-                  className="w-full bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                >
-                  Create Trip
-                </button>
-              </div>
+                      Add Expense
+                    </Button>
+                  </VStack>
+                </FormControl>
+              </VStack>
+              <Box mt={4}>
+                <Button type="submit" colorScheme="green">
+                  Submit
+                </Button>
+              </Box>
             </form>
-          </div>
-        </div>
-      )}
-    </div>
+          </ModalBody>
+        </ModalContent>
+      </Modal>
+    </ChakraProvider>
   );
 }
