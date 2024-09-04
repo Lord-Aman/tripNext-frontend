@@ -1,73 +1,35 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { MoreVertical, Plus, ArrowLeftRight, Plane } from "lucide-react";
+import { Plus, ArrowLeftRight, Plane } from "lucide-react";
 import Image from "next/image";
 import UserAvatar from "@/public/icons/avatar.svg";
-
-// Card Component
-const Card = ({ title, content, icon, onEdit }) => (
-  <div className="bg-white p-6 flex flex-col justify-between max-h-44 rounded-lg lg:min-w-72 shadow-md">
-    <div className="flex justify-between items-center mb-2">
-      <h2 className="text-sm font-semibold text-gray-500">{title}</h2>
-      <button onClick={onEdit} className="text-gray-400 hover:text-gray-600">
-        <MoreVertical size={20} />
-      </button>
-    </div>
-    <div className="flex items-center flex-grow">
-      <div className="flex-1">{content}</div>
-    </div>
-  </div>
-);
-
-// EditModal Component
-const EditModal = ({ isOpen, onClose, title, children }) => {
-  if (!isOpen) return null;
-
-  return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white rounded-lg shadow-xl p-6 w-full max-w-md">
-        <div className="flex justify-between items-center mb-4">
-          <h2 className="text-xl font-bold">{title}</h2>
-          <button
-            onClick={onClose}
-            className="text-gray-500 hover:text-gray-700"
-          >
-            &times;
-          </button>
-        </div>
-        {children}
-      </div>
-    </div>
-  );
-};
-
-const getFlagUrl = (countryCode) => {
-  return `https://flagcdn.com/w20/${countryCode.toLowerCase()}.png`;
-};
-
-const getCountryCode = async (countryName) => {
-  try {
-    const response = await fetch(
-      `https://restcountries.com/v3.1/name/${countryName}`
-    );
-    const data = await response.json();
-    return data[0]?.cca2.toLowerCase() || "in";
-  } catch (error) {
-    console.error("Error fetching country code:", error);
-    return "in";
-  }
-};
+import Card from "./Card";
+import EditModal from "./EditModal";
+import {
+  getFlagUrl,
+  getCountryCode,
+  calculateDays,
+  formatDate,
+  formatDateFromISO,
+} from "./utils";
+import { useTripContext } from "@/context/TripContext";
+import { useParams } from "next/navigation";
 
 export default function TravelCards() {
+  const params = useParams();
+  const tripId = params.tripId; // Fetch the tripId from the URL
+  const { tripsData } = useTripContext();
+  const { trips, loading } = tripsData; // Assuming tripsData contains a loading state
+
+  // Find the trip by tripId
+  const trip = trips.find((trip) => trip._id == tripId);
+
   const [travelDate, setTravelDate] = useState({
     start: "2021-09-01",
     end: "2021-09-05",
   });
-  const [people, setPeople] = useState([
-    { name: "Marta", avatar: UserAvatar },
-    { name: "Artur", avatar: UserAvatar },
-  ]);
+  const [people, setPeople] = useState([{ name: "Marta", avatar: UserAvatar }]);
   const [destination, setDestination] = useState({
     from: "Poland",
     to: "Italy",
@@ -87,10 +49,21 @@ export default function TravelCards() {
     fetchFlags();
   }, [destination.from, destination.to]);
 
-  const calculateDays = (start, end) => {
-    const diffTime = Math.abs(new Date(end) - new Date(start));
-    return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-  };
+  useEffect(() => {
+    if (trip) {
+      setTravelDate({
+        start: formatDateFromISO(trip.startDate),
+        end: formatDateFromISO(trip.endDate),
+      });
+
+      const participants = trip.participants.map((participant, index) => ({
+        name: participant?.split(" ")[0],
+        avatar: `https://randomuser.me/api/portraits/men/${index + 1}.jpg`,
+      }));
+
+      setPeople(participants);
+    }
+  }, [trip]);
 
   const handleEdit = (cardType) => {
     setEditingCard(cardType);
@@ -115,14 +88,9 @@ export default function TravelCards() {
     handleCloseModal();
   };
 
-  const formatDate = (dateString) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString("en-GB").replace(/\//g, ".");
-  };
-
   return (
     <div className="w-full p-4 pr-0 flex ">
-      <div className="w-full p-4 gap-8 container mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2">
+      <div className="w-full p-4 gap-8 container mx-auto grid grid-cols-1 md:grid-cols-2 ">
         <div className="grid gap-4 grid-cols-2 md:grid-cols-2 lg:grid-cols-2">
           <Card
             title="Travel date"
@@ -141,7 +109,6 @@ export default function TravelCards() {
             onEdit={() => handleEdit("travelDate")}
           />
 
-          {/* TODO: Add functionality to add people and show ... if there are more than two people */}
           <Card
             title="People"
             content={
@@ -157,7 +124,9 @@ export default function TravelCards() {
                         key={index}
                         src={person.avatar}
                         alt={person.name}
-                        className="w-8 h-8 rounded-full border-2 border-white -ml-2 first:ml-0"
+                        height={48}
+                        width={48}
+                        className="rounded-full border-2 border-white -ml-2 first:ml-0"
                       />
                     ))}
                     <div className="ml-2 text-sm text-gray-600">

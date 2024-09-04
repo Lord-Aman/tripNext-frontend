@@ -3,10 +3,9 @@
 import React, { useEffect } from "react";
 import { useParams } from "next/navigation";
 import { useTripContext } from "@/context/TripContext";
-import { useSnackbar } from "notistack";
-import LoadingSpinner from "@/components/LoadingSpinner/LoadingSpinner"; // Import your LoadingSpinner component
+import LoadingSpinner from "@/components/LoadingSpinner/LoadingSpinner";
 
-const categories = ["transport", "hotel", "others"]; // Define the categories
+const categories = ["transport", "hotel", "others"];
 
 const totalExpense = (expenses) => {
   return expenses.reduce((total, expense) => total + (expense.amount || 0), 0);
@@ -40,7 +39,6 @@ function darkenColor(color, amount) {
 }
 
 export default function ExpensesBubbleChart() {
-  const { enqueueSnackbar } = useSnackbar();
   const params = useParams();
   const tripId = params.tripId; // Fetch the tripId from the URL
   const { tripsData } = useTripContext();
