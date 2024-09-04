@@ -1,6 +1,8 @@
 "use client";
 
 import React, { useState } from "react";
+import { useTripContext } from "@/context/TripContext";
+import { useSnackbar } from "notistack";
 import {
   Modal,
   ModalOverlay,
@@ -22,8 +24,13 @@ import { ChakraProvider } from "@chakra-ui/react";
 import DatePicker from "react-datepicker";
 import { X, Plus, Trash } from "lucide-react";
 import "react-datepicker/dist/react-datepicker.css";
+import useUserData from "@/hooks/useUserData";
 
 export default function TripModal({ isOpen, onClose }) {
+  const { enqueueSnackbar } = useSnackbar();
+  const { userId } = useUserData();
+  const { tripsData } = useTripContext();
+  const { createTrip } = tripsData;
   const [tripName, setTripName] = useState("");
   const [sourceCountry, setSourceCountry] = useState("");
   const [destinationCountry, setDestinationCountry] = useState("");
@@ -64,9 +71,9 @@ export default function TripModal({ isOpen, onClose }) {
     setExpenses(newExpenses);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log({
+    const data = {
       tripName,
       sourceCountry,
       destinationCountry,
@@ -74,8 +81,16 @@ export default function TripModal({ isOpen, onClose }) {
       endDate,
       participants,
       expenses,
-    });
-    onClose();
+      userId,
+    };
+
+    try {
+      const res = await createTrip(data);
+      enqueueSnackbar("Trip added successfully", { variant: "success" });
+      onClose();
+    } catch (error) {
+      enqueueSnackbar(error.message, { variant: "error" });
+    }
   };
 
   return (
@@ -162,7 +177,6 @@ export default function TripModal({ isOpen, onClose }) {
                     <Button
                       leftIcon={<Plus size={16} />}
                       onClick={handleAddParticipant}
-                      colorScheme="blue"
                     >
                       Add Participant
                     </Button>
@@ -208,15 +222,18 @@ export default function TripModal({ isOpen, onClose }) {
                     <Button
                       leftIcon={<Plus size={16} />}
                       onClick={handleAddExpense}
-                      colorScheme="blue"
                     >
                       Add Expense
                     </Button>
                   </VStack>
                 </FormControl>
               </VStack>
-              <Box mt={4}>
-                <Button type="submit" colorScheme="green">
+              <Box mt={4} className="w-full flex justify-center">
+                <Button
+                  type="submit"
+                  colorScheme="blue"
+                  className="mx-auto w-64"
+                >
                   Submit
                 </Button>
               </Box>

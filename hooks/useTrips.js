@@ -40,6 +40,7 @@ const useTrips = () => {
       setTrips((prevTrips) => [...prevTrips, newTrip]);
     } catch (err) {
       setError(err.message);
+      throw err;
     } finally {
       setLoading(false);
     }

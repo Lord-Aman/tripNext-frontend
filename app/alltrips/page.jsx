@@ -1,4 +1,9 @@
-import { PlusCircle } from "lucide-react";
+"use client";
+
+import React, { useState } from "react";
+import Button from "@/components/Button/Button";
+import { useTripContext } from "@/context/TripContext";
+import NewTripModal from "@/components/NewTripModal/NewTripModal";
 
 // Function to calculate trip duration
 const calculateDuration = (startDate, endDate) => {
@@ -51,6 +56,11 @@ const trips = [
 ];
 
 export default function TripList() {
+  const { tripsData } = useTripContext();
+  const { trips } = tripsData;
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
   return (
     <div className="min-h-screen bg-backgroundGray">
       {/* Heading */}
@@ -99,14 +109,21 @@ export default function TripList() {
             ))}
           </div>
         ) : (
-          <div className="text-center py-16">
+          <div className="text-center flex flex-col items-center justify-center py-16">
             <p className="text-2xl text-gray-600 mb-8">
-              Enjoy moments by planning a trip.
+              No trips found. Enjoy moments by planning a trip.
             </p>
-            <button className="bg-blue-500 hover:bg-blue-600 text-white text-lg font-semibold py-3 px-6 rounded-lg inline-flex items-center transition duration-300 transform hover:scale-105">
-              <PlusCircle className="mr-2" size={24} />
-              Add Trip
-            </button>
+            <Button
+              className="bg-customBlue h-12 w-64 text-white rounded-lg shadow-custom"
+              text="New Trip"
+              onClick={() => {
+                setIsModalOpen(true);
+              }}
+            />
+            <NewTripModal
+              isOpen={isModalOpen}
+              onClose={() => setIsModalOpen(false)}
+            />
           </div>
         )}
       </div>

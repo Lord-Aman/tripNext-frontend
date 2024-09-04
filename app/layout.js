@@ -14,18 +14,18 @@ const sora = Sora({
 export default function RootLayout({ children }) {
   return (
     <ClerkProvider>
-      <TripProvider>
-        <html lang="en">
-          <body className={sora.className}>
-            <SignedOut>
-              <Login />
-            </SignedOut>
-            <SignedIn>
+      <html lang="en">
+        <body className={sora.className}>
+          <SignedOut>
+            <Login />
+          </SignedOut>
+          <SignedIn>
+            <TripProvider>
               <ClientWrapper>{children}</ClientWrapper>
-            </SignedIn>
-          </body>
-        </html>
-      </TripProvider>
+            </TripProvider>
+          </SignedIn>
+        </body>
+      </html>
     </ClerkProvider>
   );
 }
