@@ -88,7 +88,7 @@ export default function TripList() {
                       })}
                     </p>
                     <Link href={`/trips/${trip._id}`}>
-                      <button className="w-full bg-white text-black py-3 px-4 rounded-full text-sm font-semibold hover:bg-opacity-90 transition duration-300">
+                      <button className="w-full bg-white text-black py-3 px-4 rounded-full text-sm font-semibold hover:bg-opacity-90 mt-4 transition duration-300">
                         View trip
                       </button>
                     </Link>

@@ -1,4 +1,6 @@
+import { useUser } from "@clerk/nextjs";
 import { useState, useEffect } from "react";
+import useUserData from "@/hooks/useUserData";
 
 const backend_endpoint = process.env.NEXT_PUBLIC_TRIPNEXT_BACKEND_ENDPOINT;
 
@@ -6,6 +8,7 @@ const useTrips = () => {
   const [trips, setTrips] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const { userId } = useUserData();
 
   // Fetch all trips
   const fetchTrips = async () => {
@@ -18,6 +21,7 @@ const useTrips = () => {
       setTrips(data);
     } catch (err) {
       setError(err.message);
+      throw err;
     } finally {
       setLoading(false);
     }
@@ -65,6 +69,7 @@ const useTrips = () => {
       );
     } catch (err) {
       setError(err.message);
+      throw err;
     } finally {
       setLoading(false);
     }
@@ -82,6 +87,7 @@ const useTrips = () => {
       setTrips((prevTrips) => prevTrips.filter((trip) => trip.id !== id));
     } catch (err) {
       setError(err.message);
+      throw err;
     } finally {
       setLoading(false);
     }
@@ -98,15 +104,33 @@ const useTrips = () => {
       setTrips(data);
     } catch (err) {
       setError(err.message);
+      throw err;
     } finally {
       setLoading(false);
     }
   };
 
+  // Get trips by userId
+  const fetchTripByTripId = async (tripId) => {
+    setLoading(true);
+    setError(null);
+    try {
+      const response = await fetch(`${backend_endpoint}/trips/${tripId}`);
+      if (!response.ok) throw new Error("Failed to fetch trip");
+      const data = await response.json();
+      setTrips(data);
+    } catch (err) {
+      setError(err.message);
+      throw err;
+    } finally {
+      setLoading(false);
+    }
+  };
   // Initial load to fetch trips
   useEffect(() => {
-    fetchTrips();
-  }, []);
+    // fetchTripsByUserId(userId);
+    userId && fetchTripsByUserId(userId);
+  }, [userId]);
 
   return {
     trips,
@@ -117,6 +141,7 @@ const useTrips = () => {
     updateTrip,
     deleteTrip,
     fetchTripsByUserId,
+    fetchTripByTripId,
   };
 };
 

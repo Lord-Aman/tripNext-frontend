@@ -58,10 +58,6 @@ export default function TripModal({ isOpen, onClose }) {
     setParticipants(newParticipants);
   };
 
-  const handleAddExpense = () => {
-    setExpenses([...expenses, { category: "transport", amount: "" }]);
-  };
-
   const handleExpenseChange = (index, field, value) => {
     const newExpenses = [...expenses];
     newExpenses[index][field] = value;
@@ -221,12 +217,6 @@ export default function TripModal({ isOpen, onClose }) {
                         />
                       </HStack>
                     ))}
-                    <Button
-                      leftIcon={<Plus size={16} />}
-                      onClick={handleAddExpense}
-                    >
-                      Add Expense
-                    </Button>
                   </VStack>
                 </FormControl>
               </VStack>
