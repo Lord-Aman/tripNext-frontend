@@ -1,12 +1,28 @@
-import React from 'react'
-import Image from 'next/image'
-import AvatarIcon from '@/public/icons/avatar.svg'
+import React from "react";
+import { useUser } from "@clerk/nextjs";
+import Image from "next/image";
+import AvatarIcon from "@/public/icons/avatar.svg";
+import { UserAvatar } from "@/public/icons/avatar.svg";
+import { UserButton } from "@clerk/nextjs";
 
 export default function UserProfile() {
+  const { user } = useUser();
+
+  const UserData = {
+    fullName: user?.fullName,
+    email: user?.primaryEmailAddress.emailAddress,
+    imageUrl: user?.hasImage ? user.imageUrl : UserAvatar,
+  };
+
+  localStorage.setItem("User", JSON.stringify(UserData));
   return (
     <button className="flex items-center space-x-2">
-      <span className="text-sm font-medium text-gray-700">Nick McMillan</span>
-      <Image src={AvatarIcon} alt="User Avatar" width={48} height={48} className="rounded-full" />
+      <span className="text-base font-medium text-gray-700">
+        {UserData?.fullName}
+      </span>
+      <UserButton
+        appearance={((innerHeight = "48px"), (innerWidth = "48px"))}
+      />
     </button>
-  )
+  );
 }

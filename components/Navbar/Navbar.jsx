@@ -6,7 +6,6 @@ import UserProfile from "./UserProfile/UserProfile";
 import DropdownMenu from "./DropdownMenu/DropdownMenu";
 import { Menu } from "lucide-react";
 import Logo from "@/components/Logo/logo";
-import { UserButton } from "@clerk/nextjs";
 
 export default function Navbar({ onMenuClick }) {
   return (
@@ -31,7 +30,6 @@ export default function Navbar({ onMenuClick }) {
             <LanguageSelector />
             <Notification />
           </div>
-          <UserButton />
           <UserProfile />
         </div>
       </div>

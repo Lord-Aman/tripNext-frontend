@@ -16,7 +16,7 @@ export default function Home() {
             <div className="mb-8 w-3/4">
               <TripCarousel />
             </div>
-            <div className="mb- 8 w-1/4">
+            <div className="mb-8 w-1/4">
               <ExpensesBubbleChart />
             </div>
           </div>
@@ -35,7 +35,7 @@ export default function Home() {
             </div>
           </div>
         </div>
-        <div className="w-full h-screen md::w-1/4 mt-8 lg:mt-0">
+        <div className="w-full h-screen md:w-1/4 mt-8 lg:mt-0">
           <EventCalendar />
         </div>
       </div>
