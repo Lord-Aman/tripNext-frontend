@@ -4,7 +4,6 @@ import React, { useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Autoplay } from "swiper/modules";
 import Image from "next/image";
-import RomeImage from "@/public/images/Rome.png";
 import CloudYellow from "@/public/images/cloud_yellow.png";
 import beachDeep from "@/public/images/beach_deep_blue.png";
 import planeLight from "@/public/images/plane_light_blue.png";
@@ -35,8 +34,9 @@ export default function TripCarousel() {
 
   return (
     <div
-      className={`${isMobile ? "max-w-1/2 h-64" : "max-w-3xl h-80"
-        } mt-4 bg-cover mx-auto relative`}
+      className={`${
+        isMobile ? "max-w-1/2 h-64" : "max-w-3xl h-80"
+      } mt-4 bg-cover mx-auto relative`}
       style={{
         backgroundImage: `url(${trips[cardIndex].image.src})`,
         backgroundSize: isMobile ? "contain" : "cover",
@@ -60,8 +60,9 @@ export default function TripCarousel() {
         {trips.map((trip) => (
           <SwiperSlide key={trip.id}>
             <div
-              className={`flex flex-col items-start justify-center h-full rounded-3xl ${isMobile ? "p-4" : "p-8"
-                } w-full`}
+              className={`flex flex-col items-start justify-center h-full rounded-3xl ${
+                isMobile ? "p-4" : "p-8"
+              } w-full`}
             >
               <h2 className="text-sm font-medium mb-2 sm:text-lg">
                 Nearest trip
@@ -75,16 +76,12 @@ export default function TripCarousel() {
       {!isMobile && (
         <div className="absolute bottom-8 left-8 flex space-x-4">
           {/* Previous Button */}
-          <button
-            className="custom-prev flex items-center justify-center w-10 h-10 rounded-full bg-white shadow-lg"
-          >
+          <button className="custom-prev flex items-center justify-center w-10 h-10 rounded-full bg-white shadow-lg">
             <Image src={ArrowLeft} alt="Previous" />
           </button>
 
           {/* Next Button */}
-          <button
-            className="custom-next flex items-center justify-center w-10 h-10 rounded-full bg-white shadow-lg"
-          >
+          <button className="custom-next flex items-center justify-center w-10 h-10 rounded-full bg-white shadow-lg">
             <Image src={ArrowRight} alt="Next" />
           </button>
         </div>

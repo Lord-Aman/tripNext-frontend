@@ -39,6 +39,8 @@ export default function TripModal({ isOpen, onClose }) {
   const [participants, setParticipants] = useState([""]);
   const [expenses, setExpenses] = useState([
     { category: "transport", amount: "" },
+    { category: "hotel", amount: "" },
+    { category: "others", amount: "" },
   ]);
 
   const handleAddParticipant = () => {
