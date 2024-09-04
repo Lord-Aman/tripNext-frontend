@@ -3,6 +3,7 @@ import "./globals.css";
 import { Sora } from "next/font/google";
 import Login from "@/components/Login/Login";
 import ClientWrapper from "@/components/ClientWrapper/ClientWrapper";
+import { TripProvider } from "@/context/TripContext";
 
 const sora = Sora({
   subsets: ["latin"],
@@ -13,16 +14,18 @@ const sora = Sora({
 export default function RootLayout({ children }) {
   return (
     <ClerkProvider>
-      <html lang="en">
-        <body className={sora.className}>
-          <SignedOut>
-            <Login />
-          </SignedOut>
-          <SignedIn>
-            <ClientWrapper>{children}</ClientWrapper>
-          </SignedIn>
-        </body>
-      </html>
+      <TripProvider>
+        <html lang="en">
+          <body className={sora.className}>
+            <SignedOut>
+              <Login />
+            </SignedOut>
+            <SignedIn>
+              <ClientWrapper>{children}</ClientWrapper>
+            </SignedIn>
+          </body>
+        </html>
+      </TripProvider>
     </ClerkProvider>
   );
 }

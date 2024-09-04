@@ -1,85 +1,111 @@
-"use client";
+import { useState, useEffect } from "react";
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
+const backend_endpoint = process.env.NEXT_PUBLIC_TRIPNEXT_BACKEND_ENDPOINT;
 
-export const addTodo = async (taskName) => {
-  try {
-    const newTodo = {
-      taskName,
-      assignee: "Default",
-      priority: "Low",
-      createdAt: new Date().toISOString(),
-    };
-    const response = await fetch(`${API_BASE_URL}/todos`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(newTodo),
-    });
+const useTodos = () => {
+  const [todos, setTodos] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
-    if (!response.ok) {
-      throw new Error(`Failed to add todo: ${response.statusText}`);
+  const fetchTodosByTripId = async (tripId) => {
+    setLoading(true);
+    setError(null);
+    try {
+      const response = await fetch(`${backend_endpoint}/todos/trip/${tripId}`);
+      const data = await response.json();
+      setTodos(data);
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
     }
+  };
 
-    return await response.json();
-  } catch (error) {
-    console.error("Error adding todo:", error.message);
-    return { error: error.message };
-  }
+  const createTodo = async (todoData) => {
+    setLoading(true);
+    setError(null);
+    try {
+      const response = await fetch(`${backend_endpoint}/todos`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(todoData),
+      });
+      const newTodo = await response.json();
+      setTodos((prevTodos) => [...prevTodos, newTodo]);
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const updateTodo = async (id, todoData) => {
+    setLoading(true);
+    setError(null);
+    try {
+      const response = await fetch(`${backend_endpoint}/todos/${id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(todoData),
+      });
+      const updatedTodo = await response.json();
+      setTodos((prevTodos) =>
+        prevTodos.map((todo) => (todo.id === id ? updatedTodo : todo))
+      );
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const deleteTodo = async (id) => {
+    setLoading(true);
+    setError(null);
+    try {
+      await fetch(`${backend_endpoint}/todos/${id}`, { method: "DELETE" });
+      setTodos((prevTodos) => prevTodos.filter((todo) => todo.id !== id));
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const reorderTodos = async (todosList) => {
+    setLoading(true);
+    setError(null);
+    try {
+      const response = await fetch(`${backend_endpoint}/todos/reorder`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ todos: todosList }),
+      });
+      const updatedTodos = await response.json();
+      setTodos(updatedTodos);
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return {
+    todos,
+    loading,
+    error,
+    fetchTodosByTripId,
+    createTodo,
+    updateTodo,
+    deleteTodo,
+    reorderTodos,
+  };
 };
 
-export const updateTodo = async (id, updatedData) => {
-  try {
-    const response = await fetch(`${API_BASE_URL}/todos/${id}`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(updatedData),
-    });
-
-    if (!response.ok) {
-      throw new Error(`Failed to update todo: ${response.statusText}`);
-    }
-
-    return await response.json();
-  } catch (error) {
-    console.error(`Error updating todo with id ${id}:`, error.message);
-    return { error: error.message };
-  }
-};
-
-export const deleteTodo = async (id) => {
-  try {
-    const response = await fetch(`${API_BASE_URL}/todos/${id}`, {
-      method: "DELETE",
-    });
-
-    if (!response.ok) {
-      throw new Error(`Failed to delete todo: ${response.statusText}`);
-    }
-  } catch (error) {
-    console.error(`Error deleting todo with id ${id}:`, error.message);
-    return { error: error.message };
-  }
-};
-
-export const reorderTodos = async (newOrder) => {
-  try {
-    const response = await fetch(`${API_BASE_URL}/todos/reorder`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ todos: newOrder }),
-    });
-
-    if (!response.ok) {
-      throw new Error(`Failed to reorder todos: ${response.statusText}`);
-    }
-  } catch (error) {
-    console.error("Error reordering todos:", error.message);
-    return { error: error.message };
-  }
-};
+export default useTodos;

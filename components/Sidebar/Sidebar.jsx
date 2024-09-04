@@ -16,7 +16,6 @@ import {
 import Button from "@/components/Button/Button";
 import WeatherCard from "../Weather/WeatherCard";
 import NewTripModal from "../NewTripModal/NewTripModal";
-import WeatherCardLocation from "../Weather/WeatherCardLocation";
 
 export default function Sidebar({ isOpen, onClose }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -54,8 +53,7 @@ export default function Sidebar({ isOpen, onClose }) {
           <MenuItem key={index} {...item} />
         ))}
       </nav>
-      {/* <WeatherCard location="rome" /> */}
-      <WeatherCardLocation />
+      <WeatherCard location="rome" />
       <MenuItem
         className="p-12"
         icon={<HelpCircle size={20} />}
