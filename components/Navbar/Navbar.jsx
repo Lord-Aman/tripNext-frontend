@@ -10,12 +10,12 @@ import Logo from "@/components/Logo/logo";
 export default function Navbar({ onMenuClick }) {
   return (
     <nav className="flex flex-col bg-backgroundGray">
-      <div className="flex items-center justify-between px-6 py-3">
-        <div className="flex items-center space-x-4 w-3/4">
+      <div className="flex items-center justify-between px-4 py-3">
+        <div className="flex items-center justify-between space-x-4 w-[70%] md:w-3/4">
           <button className="md:hidden" onClick={onMenuClick}>
             <Menu size={24} />
           </button>
-          <div className="md:hidden">
+          <div className="md:hidden h-10">
             <Logo />
           </div>
           <div className="hidden md:block">

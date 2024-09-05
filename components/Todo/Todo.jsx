@@ -3,8 +3,7 @@
 import React, { useState } from "react";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import { ArrowUpDown, Pencil, Trash2, GripVertical } from "lucide-react";
-import Image from "next/image";
-import UserAvatar from "@/public/icons/avatar.svg";
+import useResizer from "@/hooks/useResizer";
 
 const initialTasks = [
   {
@@ -44,6 +43,7 @@ const priorityColors = {
 };
 
 function TodoItem({ task, index, onComplete, onEdit, onDelete }) {
+  const isMobile = useResizer();
   return (
     <Draggable draggableId={task.id} index={index}>
       {(provided, snapshot) => (
@@ -72,13 +72,13 @@ function TodoItem({ task, index, onComplete, onEdit, onDelete }) {
             />
           </div>
           <div
-            className={`col-span-5 ${
+            className={`col-span-3 md: col-span-5${
               task.completed ? "line-through text-gray-400" : ""
             }`}
           >
             {task.taskName}
           </div>
-          <div className="col-span-2 flex items-center">
+          <div className="col-span-3 md:col-span-2 flex items-center">
             <img
               src={`https://randomuser.me/api/portraits/men/${index + 1}.jpg`}
               width={24}
@@ -86,9 +86,9 @@ function TodoItem({ task, index, onComplete, onEdit, onDelete }) {
               alt={task.assignee}
               className="rounded-full mr-2"
             />
-            <span>{task.assignee}</span>
+            {!isMobile && <span>{task.assignee}</span>}
           </div>
-          <div className="col-span-3 flex items-center justify-between">
+          <div className="col-span-2 flex items-center justify-between">
             <span
               className={`inline-block px-2 py-1 rounded-full text-sm ${
                 priorityColors[task.priority]
@@ -96,20 +96,22 @@ function TodoItem({ task, index, onComplete, onEdit, onDelete }) {
             >
               {task.priority}
             </span>
-            <div className="flex items-center space-x-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-              <button
-                onClick={() => onEdit(task)}
-                className="p-1 hover:bg-gray-200 rounded"
-              >
-                <Pencil size={16} className="text-gray-500" />
-              </button>
-              <button
-                onClick={() => onDelete(task.id)}
-                className="p-1 hover:bg-gray-200 rounded"
-              >
-                <Trash2 size={16} className="text-gray-500" />
-              </button>
-            </div>
+            {!isMobile && (
+              <div className="flex items-center space-x-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                <button
+                  onClick={() => onEdit(task)}
+                  className="p-1 hover:bg-gray-200 rounded"
+                >
+                  <Pencil size={16} className="text-gray-500" />
+                </button>
+                <button
+                  onClick={() => onDelete(task.id)}
+                  className="p-1 hover:bg-gray-200 rounded"
+                >
+                  <Trash2 size={16} className="text-gray-500" />
+                </button>
+              </div>
+            )}
           </div>
         </li>
       )}
@@ -181,6 +183,7 @@ function EditTaskModal({ task, onSave, onClose }) {
 }
 
 export default function TodoList() {
+  const isMobile = useResizer();
   const [tasks, setTasks] = useState(initialTasks);
   const [editingTask, setEditingTask] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -234,7 +237,7 @@ export default function TodoList() {
   return (
     <div className="max-w-4xl mx-auto p-6 bg-backgroundGray rounded-lg">
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-4xl font-bold text-gray-900">To do's</h1>
+        <h1 className="text-xl md:text-4xl font-bold text-gray-900">To do's</h1>
         <button
           onClick={handleSort}
           className="flex items-center text-gray-600 hover:text-gray-900"
@@ -242,11 +245,11 @@ export default function TodoList() {
           Sort <ArrowUpDown className="ml-1" />
         </button>
       </div>
-      <div className="mb-4 grid grid-cols-12 gap-4 text-sm font-medium text-gray-500">
+      <div className="mb-4 grid grid-cols-12 gap-4 text-xs md:text-sm font-medium text-gray-500">
         <div className="col-span-1">#</div>
         <div className="col-span-1"></div>
-        <div className="col-span-5">Task name</div>
-        <div className="col-span-2">Assignee</div>
+        <div className="col-span-3 md:col-span-5">Task name</div>
+        <div className="col-span-3">Assignee</div>
         <div className="col-span-3">Priority</div>
       </div>
       <DragDropContext onDragEnd={onDragEnd}>

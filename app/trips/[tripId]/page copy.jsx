@@ -5,9 +5,8 @@ import EventCalendar from "@/components/EventCalendar/EventCalendar";
 import TodoList from "@/components/Todo/Todo";
 import TravelCards from "@/components/TravelCards/TravelCards";
 import LocationMap from "@/components/LocationMap/LocationMap";
-import EventCalendarV2 from "@/components/EventCalendar/EventCalendarV2";
 
-export default function Home() {
+export default function TripPage() {
   return (
     <div className="w-full mx-auto px-4 sm:px-6 md:px-8">
       <div className="flex flex-col lg:flex-row lg:space-x-4">

@@ -35,7 +35,7 @@ export default function TripCarousel() {
   return (
     <div
       className={`${
-        isMobile ? "max-w-1/2 h-64" : "max-w-3xl h-80"
+        isMobile ? "w-[90vw] h-[20vh] bg-no-repeat" : "max-w-3xl h-80"
       } mt-4 bg-cover mx-auto relative`}
       style={{
         backgroundImage: `url(${trips[cardIndex].image.src})`,
@@ -61,7 +61,7 @@ export default function TripCarousel() {
           <SwiperSlide key={trip.id}>
             <div
               className={`flex flex-col items-start justify-center h-full rounded-3xl ${
-                isMobile ? "p-4" : "p-8"
+                isMobile ? "p-4 mt-4" : "p-8"
               } w-full`}
             >
               <h2 className="text-sm font-medium mb-2 sm:text-lg">
@@ -73,19 +73,19 @@ export default function TripCarousel() {
         ))}
       </Swiper>
 
-      {!isMobile && (
-        <div className="absolute bottom-8 left-8 flex space-x-4">
+      {
+        <div className="absolute bottom-2 sm:bottom-8 left-4 md:left-8 flex space-x-4">
           {/* Previous Button */}
-          <button className="custom-prev flex items-center justify-center w-10 h-10 rounded-full bg-white shadow-lg">
+          <button className="custom-prev flex items-center justify-center  sm:w-8  md:w-10  sm:h-8 w-6 md:h-10 rounded-full bg-white shadow-lg">
             <Image src={ArrowLeft} alt="Previous" />
           </button>
 
           {/* Next Button */}
-          <button className="custom-next flex items-center justify-center w-10 h-10 rounded-full bg-white shadow-lg">
+          <button className="custom-next flex items-center justify-center sm:w-8 sm:h-8 w-6 md:w-10  md:h-10 rounded-full bg-white shadow-lg">
             <Image src={ArrowRight} alt="Next" />
           </button>
         </div>
-      )}
+      }
     </div>
   );
 }

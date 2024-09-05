@@ -85,12 +85,14 @@ export default function ExpensesBubbleChart() {
   }
 
   return (
-    <div className="bg-backgroundGray w-full md:w-full max-h-80 p-6 m-4 rounded-lg max-w-md mx-auto">
+    <div className="bg-backgroundGray md:w-full max-h-80  md:p-6 m-4 rounded-lg max-w-md mx-auto">
       {/* Header for expenses */}
-      <h2 className="text-base font-normal text-gray-400 mb-4">Expenses</h2>
+      <h2 className=" md:text-left text-center  font-normal text-gray-400 mb-4">
+        Expenses
+      </h2>
 
       {/* Bubble chart area */}
-      <div className="relative h-56 mb-4">
+      <div className="relative h-56 md:w-full w-[60%] mx-auto mb-4">
         {loading || !trip || !trip.expenses ? (
           <LoadingSpinner />
         ) : (
@@ -119,7 +121,7 @@ export default function ExpensesBubbleChart() {
       </div>
 
       {/* Category list */}
-      <div className="flex justify-start items-center space-x-4">
+      <div className="flex md:justify-start justify-center items-center space-x-4">
         {categories.map((category, index) => (
           <div key={index} className="flex items-center space-x-1">
             <div

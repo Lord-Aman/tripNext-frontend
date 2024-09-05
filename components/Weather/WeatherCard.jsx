@@ -91,7 +91,7 @@ const WeatherCard = () => {
   });
 
   return (
-    <div className="max-w-xs mx-auto bg-[#FAF9FF] h-52 w-56 mb-4 rounded-xl shadow-md overflow-hidden">
+    <div className="max-w-xs hidden md:block mx-auto bg-[#FAF9FF] h-52 w-56 mb-4 rounded-xl shadow-md overflow-hidden">
       <div className="p-6">
         <div className="flex items-center justify-between">
           <div className="flex items-center">

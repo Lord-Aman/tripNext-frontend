@@ -15,8 +15,10 @@ import {
 } from "./utils";
 import { useTripContext } from "@/context/TripContext";
 import { useParams } from "next/navigation";
+import useResizer from "@/hooks/useResizer";
 
 export default function TravelCards() {
+  const isMobile = useResizer();
   const params = useParams();
   const tripId = params.tripId; // Fetch the tripId from the URL
   const { tripsData } = useTripContext();
@@ -111,21 +113,24 @@ export default function TravelCards() {
 
   return (
     <div className="w-full pr-0 flex ">
-      <div className="w-full p-4 gap-4 container mx-auto grid grid-cols-1 md:grid-cols-2 ">
+      <div className="w-full md:p-4 gap-4 container mx-auto grid grid-cols-1 md:grid-cols-2 ">
         <div className="grid gap-4 grid-cols-2 md:grid-cols-2 lg:grid-cols-2">
           <Card
             title="Travel date"
             content={
               <div>
-                <div className="text-4xl font-bold leading-tight mb-2 w-full">
+                <div className="text-xl md:text-4xl font-bold leading-tight mb-2 w-full">
                   {loading
                     ? 0
                     : calculateDays(travelDate.start, travelDate.end)}{" "}
                   days
                 </div>
-                <div className="w-full mt-4 space-x-4 text-sm text-gray-500">
+                <div className="w-full mt-4 md:space-x-4 space-x-2 no-wrap flex text-[10px] md:text-sm text-gray-500">
                   <span>{formatDate(travelDate.start)}</span>
-                  <ArrowLeftRight className="inline" size={16} />{" "}
+                  <ArrowLeftRight
+                    className="inline"
+                    size={isMobile ? 10 : 16}
+                  />{" "}
                   <span>{formatDate(travelDate.end)}</span>
                 </div>
               </div>
@@ -137,7 +142,7 @@ export default function TravelCards() {
             title="People"
             content={
               <div>
-                <div className="text-4xl font-bold leading-tight mb-2">
+                <div className="text-xl md:text-4xl font-bold leading-tight mb-2">
                   {people.length}{" "}
                   <span className="text-lg font-normal">/adults</span>
                 </div>
@@ -157,7 +162,7 @@ export default function TravelCards() {
                         ""
                       )
                     )}
-                    <div className="ml-2 text-sm text-gray-600">
+                    <div className="ml-2 text-xs md:text-sm text-gray-600">
                       {people.length > 2
                         ? `${people
                             .slice(0, 2)
@@ -181,10 +186,10 @@ export default function TravelCards() {
             title="Destination"
             content={
               <div className="">
-                <div className="text-4xl font-bold leading-tight mb-4">
+                <div className="text-xl md:text-4xl font-bold leading-tight mb-4">
                   {destination.to}
                 </div>
-                <div className="flex items-center justify-between space-x-4 text-sm text-gray-600">
+                <div className="flex items-center justify-between space-x-4 text-xs md:text-sm text-gray-600">
                   <div className="flex space-x-4  justify-between">
                     <div className="space-x-2 flex items-center ">
                       <img
@@ -195,19 +200,19 @@ export default function TravelCards() {
                       {destination.from}{" "}
                       <ArrowLeftRight className="mx-1" size={16} />
                     </div>
-                    <div className="space-x-2 flex items-center justify-center">
+                    <div className="space-x-2 flex items-center ">
                       <div className="flex mr-8">
                         <img
                           src={getFlagUrl(toFlag)}
                           alt={`${destination.to} flag`}
-                          className="mr-4"
+                          className="mr-2"
                         />
                         {destination.to}
                       </div>
                     </div>
                   </div>
-                  <div className="flex space-x-4 items-center">
-                    <Plane className="ml-2 mr-1" size={16} />2 h 25 min flight
+                  <div className="flex space-x-2 w-full items-center justify-end">
+                    <Plane className="ml-2 mr-2" size={16} />2 h 25 min flight
                   </div>
                 </div>
               </div>
@@ -237,7 +242,7 @@ export default function TravelCards() {
           }}
         >
           <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-700">
+            <label className="block text-xs md:text-sm font-medium text-gray-700">
               Start Date
             </label>
             <input
@@ -249,7 +254,7 @@ export default function TravelCards() {
             />
           </div>
           <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-700">
+            <label className="block text-xs md:text-sm font-medium text-gray-700">
               End Date
             </label>
             <input
@@ -286,7 +291,7 @@ export default function TravelCards() {
         >
           {people.map((person, index) => (
             <div key={index} className="mb-4">
-              <label className="block text-sm font-medium text-gray-700">
+              <label className="block text-xs md:text-sm font-medium text-gray-700">
                 Person {index + 1}
               </label>
               <input
@@ -324,7 +329,7 @@ export default function TravelCards() {
           }}
         >
           <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-700">
+            <label className="block text-xs md:text-sm font-medium text-gray-700">
               From
             </label>
             <input
@@ -336,7 +341,7 @@ export default function TravelCards() {
             />
           </div>
           <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-700">
+            <label className="block text-xs md:text-sm font-medium text-gray-700">
               To
             </label>
             <input
@@ -347,11 +352,7 @@ export default function TravelCards() {
               required
             />
           </div>
-          <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-700">
-              Flight Duration
-            </label>
-          </div>
+
           <button
             type="submit"
             className="w-full bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"

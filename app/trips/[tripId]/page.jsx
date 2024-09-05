@@ -26,8 +26,9 @@ export default function TripPage() {
             <TravelCards />
           </div>
 
-          <div className="w-full flex flex-col md:flex-row md:space-x-4 lg:space-x-8 p-4">
-            <div className="w-full md:w-1/2 lg:w-1/4 mb-8 md:mb-0">
+          {/* Location and Todo */}
+          <div className="w-full flex flex-col md:flex-row md:space-x-4 lg:space-x-8">
+            <div className="w-full mb-8 md:w-1/2 lg:w-1/4">
               <LocationMap />
             </div>
             <div className="w-full md:w-1/2 lg:w-3/4">

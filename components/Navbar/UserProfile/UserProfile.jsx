@@ -17,10 +17,10 @@ export default function UserProfile() {
   // localStorage.setItem("User", JSON.stringify(UserData));
   return (
     <button className="flex items-center space-x-2">
-      <span className="text-base font-medium text-gray-700">
+      <span className="text-base font-medium hidden md:block text-gray-700">
         {UserData?.fullName}
       </span>
-      <UserButton />
+      <UserButton className="mr-0 md:mr-4" />
     </button>
   );
 }
