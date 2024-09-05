@@ -33,17 +33,11 @@ To learn more about Next.js, take a look at the following resourc[<img src="http
 Key features include:
 
 - Upcoming Trip Overview: Stay on top of your next adventure with a snapshot of destination, travel dates, and companions.
-  ![alt text](image-1.png)
 - Expense Breakdown: Track your spending with an easy-to-read pie chart, helping you manage your budget across transport, accommodation, and other categories.
-  ![alt text](image-2.png)
 - To-Do List: Stay organized with a task manager that lets you assign, prioritize, and track your trip-related tasks.
-  ![alt text](image-3.png)
 - Interactive Map: View your destination on the map for better planning and navigation.
-  ![alt text](image-4.png)
 - Timeline & Calendar: Easily schedule your activities and track them with a visual timeline.
-  ![alt text](image-5.png)
 - Weather Forecast: Get real-time weather updates for your destination so you can pack accordingly.
-  ![alt text](image-6.png)
   </code>
 
 <p align="left">
