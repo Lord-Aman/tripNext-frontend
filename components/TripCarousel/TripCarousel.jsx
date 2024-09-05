@@ -35,7 +35,7 @@ export default function TripCarousel() {
   return (
     <div
       className={`${
-        isMobile ? "w-[90vw] h-[20vh] bg-no-repeat" : "max-w-3xl h-80"
+        isMobile ? "w-[90vw] h-[20vh] -mr-6  bg-no-repeat" : "max-w-3xl h-80"
       } mt-4 bg-cover mx-auto relative`}
       style={{
         backgroundImage: `url(${trips[cardIndex].image.src})`,
