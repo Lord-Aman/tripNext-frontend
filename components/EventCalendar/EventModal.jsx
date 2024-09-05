@@ -24,11 +24,11 @@ const EventModal = ({ event, onClose, onSave, onDelete, isOpen }) => {
   const [date, setDate] = useState(event ? event.date : "");
   const [startTime, setStartTime] = useState(event ? event.startTime : "");
   const [endTime, setEndTime] = useState(event ? event.endTime : "");
-  const [type, setType] = useState(event ? event.type : "flight");
+  const [category, setCategory] = useState(event ? event.category : "flight");
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const eventData = { title, date, startTime, endTime, type };
+    const eventData = { title, date, startTime, endTime, category };
     if (event) {
       onSave({ ...event, ...eventData });
     } else {
@@ -85,11 +85,11 @@ const EventModal = ({ event, onClose, onSave, onDelete, isOpen }) => {
                   />
                 </FormControl>
                 <FormControl>
-                  <FormLabel htmlFor="type">Event Type</FormLabel>
+                  <FormLabel htmlFor="category">Event Category</FormLabel>
                   <Select
                     id="type"
-                    value={type}
-                    onChange={(e) => setType(e.target.value)}
+                    value={category}
+                    onChange={(e) => setCategory(e.target.value)}
                   >
                     <option value="flight">Flight</option>
                     <option value="bus">Bus</option>
@@ -102,7 +102,7 @@ const EventModal = ({ event, onClose, onSave, onDelete, isOpen }) => {
           <ModalFooter>
             <HStack spacing={2} justifyContent="space-between" width="100%">
               {event && (
-                <Button colorScheme="red" onClick={() => onDelete(event.id)}>
+                <Button colorScheme="red" onClick={() => onDelete(event._id)}>
                   Delete
                 </Button>
               )}

@@ -6,6 +6,7 @@ const useEvents = () => {
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [tripId, setTripId] = useState(null);
 
   const fetchEventsByTripId = async (tripId) => {
     setLoading(true);
@@ -13,6 +14,7 @@ const useEvents = () => {
     try {
       const response = await fetch(`${backend_endpoint}/events/trip/${tripId}`);
       const data = await response.json();
+      console.log("data from backend", tripId);
       setEvents(data);
     } catch (err) {
       setError(err.message);
@@ -38,6 +40,7 @@ const useEvents = () => {
       setError(err.message);
     } finally {
       setLoading(false);
+      setTripId(eventData.tripId);
     }
   };
 
@@ -60,10 +63,11 @@ const useEvents = () => {
       setError(err.message);
     } finally {
       setLoading(false);
+      setTripId(eventData.tripId);
     }
   };
 
-  const deleteEvent = async (id) => {
+  const deleteEvent = async (tripId, id) => {
     setLoading(true);
     setError(null);
     try {
@@ -73,8 +77,13 @@ const useEvents = () => {
       setError(err.message);
     } finally {
       setLoading(false);
+      setTripId(tripId);
     }
   };
+
+  useEffect(() => {
+    tripId && fetchEventsByTripId(tripId);
+  }, [tripId]);
 
   return {
     events,

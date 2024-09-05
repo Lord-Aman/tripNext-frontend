@@ -84,12 +84,6 @@ export default function ExpensesBubbleChart() {
     });
   }
 
-  useEffect(() => {
-    if (trip) {
-      console.log("Trip Data", trip);
-    }
-  }, [trip]);
-
   return (
     <div className="bg-backgroundGray w-full md:w-full max-h-80 p-6 m-4 rounded-lg max-w-md mx-auto">
       {/* Header for expenses */}

@@ -3,13 +3,22 @@
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { format, addDays } from "date-fns";
+import { useTripContext } from "@/context/TripContext";
+import { useSearchParams } from "next/navigation";
 
 // Importing images and icons
 import sunnyIcon from "@/public/icons/sunny.svg";
 import partlyCloudyIcon from "@/public/icons/partly-cloudy.svg";
 import thunderstormIcon from "@/public/icons/thunderstorm.svg";
 
-const WeatherCard = ({ location = "Bengaluru" }) => {
+const WeatherCard = () => {
+  const params = useSearchParams();
+  const tripId = params.tripId;
+  const { tripsData } = useTripContext();
+  const { trips } = tripsData;
+  const trip = trips.find((t) => t._id === tripId);
+
+  const [location, setLocation] = useState("Bengaluru");
   const [weatherData, setWeatherData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);

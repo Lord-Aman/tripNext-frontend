@@ -1,13 +1,46 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { MapContainer, TileLayer, Marker, Tooltip } from "react-leaflet";
+import {
+  MapContainer,
+  TileLayer,
+  Marker,
+  Tooltip,
+  useMap,
+} from "react-leaflet";
+import { useTripContext } from "@/context/TripContext";
+import { useParams } from "next/navigation";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import "./LocationMap.css";
 
-const LocationMap = ({ locationName = "Rome" }) => {
-  const [center, setCenter] = useState(null);
+// Custom hook to fly to the new map center
+const MapUpdater = ({ center }) => {
+  const map = useMap();
+  useEffect(() => {
+    if (center) {
+      map.flyTo(center, 14, { duration: 1.5 }); // Smoothly move to the new center with flyTo
+    }
+  }, [center, map]);
+
+  return null; // No visual output from this component
+};
+
+const LocationMap = () => {
+  const params = useParams();
+  const tripId = params.tripId;
+  const { tripsData } = useTripContext();
+  const { trips } = tripsData;
+  const trip = trips.find((t) => t._id === tripId);
+
+  const [center, setCenter] = useState([41.9028, 12.4964]); // Default to Rome
+  const [locationName, setLocationName] = useState("Rome");
+
+  useEffect(() => {
+    if (trip) {
+      setLocationName(trip.destinationCountry);
+    }
+  }, [trip]);
 
   const fetchCoordinates = async (location) => {
     try {
@@ -34,7 +67,9 @@ const LocationMap = ({ locationName = "Rome" }) => {
   };
 
   useEffect(() => {
-    fetchCoordinates(locationName);
+    if (locationName) {
+      fetchCoordinates(locationName);
+    }
   }, [locationName]);
 
   // Custom icon for the marker
@@ -61,6 +96,8 @@ const LocationMap = ({ locationName = "Rome" }) => {
           <Marker position={center} icon={customIcon}>
             <Tooltip>{locationName}</Tooltip>
           </Marker>
+          <MapUpdater center={center} />{" "}
+          {/* Component to fly the map to the new center */}
         </MapContainer>
       ) : (
         <div className="flex justify-center items-center h-[500px]">

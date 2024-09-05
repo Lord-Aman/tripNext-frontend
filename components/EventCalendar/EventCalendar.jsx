@@ -5,34 +5,16 @@ import Calendar from "./Calendar";
 import EventModal from "./EventModal";
 import Header from "./Header";
 import TimelineView from "./TimelineView";
+import { useParams } from "next/navigation";
+import { useTripContext } from "@/context/TripContext";
 
 const EventCalendar = () => {
-  const [events, setEvents] = useState([
-    {
-      id: "1",
-      title: "Warsaw → Rome",
-      date: "2023-09-17",
-      startTime: "08:00",
-      endTime: "09:15",
-      type: "flight",
-    },
-    {
-      id: "2",
-      title: "Bus transfer",
-      date: "2023-09-17",
-      startTime: "09:30",
-      endTime: "10:00",
-      type: "bus",
-    },
-    {
-      id: "3",
-      title: "Check into a hotel",
-      date: "2023-09-17",
-      startTime: "10:00",
-      endTime: "10:40",
-      type: "hotel",
-    },
-  ]);
+  const params = useParams();
+  const tripId = params.tripId;
+
+  const { eventsData } = useTripContext();
+  const { events, fetchEventsByTripId, createEvent, updateEvent, deleteEvent } =
+    eventsData;
 
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
@@ -58,6 +40,14 @@ const EventCalendar = () => {
     }
   }, [currentTime]);
 
+  useEffect(() => {
+    const fetchEvents = async () => {
+      await fetchEventsByTripId(tripId);
+    };
+
+    fetchEvents();
+  }, [tripId]);
+
   const openCreateModal = () => setIsCreateModalOpen(true);
   const closeCreateModal = () => setIsCreateModalOpen(false);
 
@@ -71,21 +61,23 @@ const EventCalendar = () => {
   };
 
   const addEvent = (newEvent) => {
-    setEvents([...events, { ...newEvent, id: Date.now().toString() }]);
+    createEvent({ ...newEvent, tripId });
     closeCreateModal();
   };
 
-  const updateEvent = (updatedEvent) => {
-    setEvents(
-      events.map((event) =>
-        event.id === updatedEvent.id ? updatedEvent : event
-      )
-    );
+  const updateEvents = (updatedEvent) => {
+    updateEvent(updatedEvent._id, { ...updatedEvent });
+    // setEvents(
+    //   events.map((event) =>
+    //     event.id === updatedEvent.id ? updatedEvent : event
+    //   )
+    // );
     closeEditModal();
   };
 
-  const deleteEvent = (eventId) => {
-    setEvents(events.filter((event) => event.id !== eventId));
+  const deleteEvents = (eventId) => {
+    deleteEvent(tripId, eventId);
+    // setEvents(events.filter((event) => event.id !== eventId));
     closeEditModal();
   };
 
@@ -115,14 +107,19 @@ const EventCalendar = () => {
         timelineRef={timelineRef}
       />
       {isCreateModalOpen && (
-        <EventModal onClose={closeCreateModal} onSave={addEvent} />
+        <EventModal
+          onClose={closeCreateModal}
+          onSave={addEvent}
+          isOpen={true}
+        />
       )}
       {isEditModalOpen && selectedEvent && (
         <EventModal
           event={selectedEvent}
           onClose={closeEditModal}
-          onSave={updateEvent}
-          onDelete={deleteEvent}
+          onSave={updateEvents}
+          onDelete={deleteEvents}
+          isOpen={true}
         />
       )}
     </div>
