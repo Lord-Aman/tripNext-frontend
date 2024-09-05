@@ -22,15 +22,185 @@ This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-opti
 
 ## Learn More
 
-To learn more about Next.js, take a look at the following resources:
+To learn more about Next.js, take a look at the following resourc[<img src="https://cdn-icons-png.flaticon.com/512/6295/6295417.png" align="right" width="25%" padding-right="350">]()
+
+# `TRIPNEXT-FRONTEND`
+
+![alt text](image.png)
+
+#### <code>This project is an exciting and innovative travel planner dashboard designed to make your travel planning effortless and enjoyable. Whether you're planning a weekend getaway or a long vacation, this dashboard brings all the tools you need into one user-friendly interface.
+
+Key features include:
+
+- Upcoming Trip Overview: Stay on top of your next adventure with a snapshot of destination, travel dates, and companions.
+  ![alt text](image-1.png)
+- Expense Breakdown: Track your spending with an easy-to-read pie chart, helping you manage your budget across transport, accommodation, and other categories.
+  ![alt text](image-2.png)
+- To-Do List: Stay organized with a task manager that lets you assign, prioritize, and track your trip-related tasks.
+  ![alt text](image-3.png)
+- Interactive Map: View your destination on the map for better planning and navigation.
+  ![alt text](image-4.png)
+- Timeline & Calendar: Easily schedule your activities and track them with a visual timeline.
+  ![alt text](image-5.png)
+- Weather Forecast: Get real-time weather updates for your destination so you can pack accordingly.
+  ![alt text](image-6.png)
+  </code>
+
+<p align="left">
+		<em>Built with the tools and technologies:</em>
+</p>
+<p align="center">
+	<img src="https://img.shields.io/badge/Chart.js-FF6384.svg?style=flat&logo=chartdotjs&logoColor=white" alt="Chart.js">
+	<img src="https://img.shields.io/badge/JavaScript-F7DF1E.svg?style=flat&logo=JavaScript&logoColor=black" alt="JavaScript">
+	<img src="https://img.shields.io/badge/datefns-770C56.svg?style=flat&logo=date-fns&logoColor=white" alt="datefns">
+	<img src="https://img.shields.io/badge/Swiper-6332F6.svg?style=flat&logo=Swiper&logoColor=white" alt="Swiper">
+	<img src="https://img.shields.io/badge/React-61DAFB.svg?style=flat&logo=React&logoColor=black" alt="React">
+	<img src="https://img.shields.io/badge/Leaflet-199900.svg?style=flat&logo=Leaflet&logoColor=white" alt="Leaflet">
+	<img src="https://img.shields.io/badge/JSON-000000.svg?style=flat&logo=JSON&logoColor=white" alt="JSON">
+</p>
+
+<br>
+
+##### 🔗 Table of Contents
+
+- [📍 Overview](#-overview)
+- [📂 Repository Structure](#-repository-structure)
+- [🧩 Modules](#-modules)
+- [🚀 Getting Started](#-getting-started)
+  - [🔖 Prerequisites](#-prerequisites)
+  - [📦 Installation](#-installation)
+  - [🤖 Usage](#-usage)
+  - [🧪 Tests](#-tests)
+- [📌 Project Roadmap](#-project-roadmap)
+- [🤝 Contributing](#-contributing)
+- [🎗 License](#-license)
+- [🙌 Acknowledgments](#-acknowledgments)
+
+---
+
+## 📍 Overview
+
+<code>❯ This project is an exciting and innovative travel planner dashboard designed to make your travel planning effortless and enjoyable. Whether you're planning a weekend getaway or a long vacation, this dashboard brings all the tools you need into one user-friendly interface.</code>
+
+---
+
+## 📂 Repository Structure
+
+```sh
+└── tripNext-frontend/
+    ├── README.md
+    ├── app
+    │   ├── alltrips
+    │   ├── favicon.ico
+    │   ├── globals.css
+    │   ├── layout.js
+    │   └── trips
+    ├── components
+    │   ├── Button
+    │   ├── ClientWrapper
+    │   ├── EventCalendar
+    │   ├── ExpenseBubbleChart
+    │   ├── LoadingSpinner
+    │   ├── LocationMap
+    │   ├── Login
+    │   ├── Logo
+    │   ├── MenuItem
+    │   ├── Navbar
+    │   ├── NewTripModal
+    │   ├── Sidebar
+    │   ├── Todo
+    │   ├── Todos
+    │   ├── TravelCards
+    │   ├── TripCarousel
+    │   ├── TripSwiper
+    │   └── Weather
+    ├── context
+    │   └── TripContext.js
+    ├── hooks
+    │   ├── useEvents.js
+    │   ├── useResizer.js
+    │   ├── useTodos.js
+    │   ├── useTrips.js
+    │   ├── useUserData.js
+    │   └── useUserLocation.js
+    ├── jsconfig.json
+    ├── middleware.js
+    ├── next.config.mjs
+    ├── package-lock.json
+    ├── package.json
+    ├── postcss.config.mjs
+    ├── public
+    │   ├── icons
+    │   ├── images
+    │   ├── next.svg
+    │   └── vercel.svg
+    ├── tailwind.config.js
+    ├── tripContextEg.js
+    └── utils
+        └── timeUtils.js
+```
+
+---
+
+## 🚀 Getting Started
+
+### 🔖 Prerequisites
+
+**JavaScript**: `version x.y.z`
+
+### 📦 Installation
+
+Build the project from source:
+
+1. Clone the tripNext-frontend repository:
+
+```sh
+❯ git clone https://github.com/Lord-Aman/tripNext-frontend
+```
+
+2. Navigate to the project directory:
+
+```sh
+❯ cd tripNext-frontend
+```
+
+3. Install the required dependencies:
+
+```sh
+❯ npm install
+```
+
+### 🤖 Usage
+
+To run the project, execute the following command:
+
+```sh
+❯ node app.js
+```
+
+### 🧪 Tests
+
+Execute the test suite using the following command:
+
+```sh
+❯ npm test
+```
+
+---
+
+## 🎗 License
+
+This project is protected under the [SELECT-A-LICENSE](https://choosealicense.com/licenses) License. For more details, refer to the [LICENSE](https://choosealicense.com/licenses/) file.
+
+---
+
+## 🙌 Acknowledgments
+
+- List any resources, contributors, inspiration, etc. here.
+
+---es:
 
 - [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
 - [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
 
 You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
