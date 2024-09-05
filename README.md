@@ -175,22 +175,8 @@ Build the project from source:
 To run the project, execute the following command:
 
 ```sh
-❯ node app.js
+❯ npm run dev
 ```
-
-### 🧪 Tests
-
-Execute the test suite using the following command:
-
-```sh
-❯ npm test
-```
-
----
-
-## 🎗 License
-
-This project is protected under the [SELECT-A-LICENSE](https://choosealicense.com/licenses) License. For more details, refer to the [LICENSE](https://choosealicense.com/licenses/) file.
 
 ---
 
