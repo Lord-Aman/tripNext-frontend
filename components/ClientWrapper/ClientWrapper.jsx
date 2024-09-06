@@ -4,6 +4,7 @@ import { useState } from "react";
 import Navbar from "@/components/Navbar/Navbar";
 import Sidebar from "@/components/Sidebar/Sidebar";
 import { SnackbarProvider } from "notistack";
+import ScaledLayout from "../ScaledLayout/ScaledLayout";
 
 export default function ClientWrapper({ children }) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -22,10 +23,12 @@ export default function ClientWrapper({ children }) {
           isOpen={isSidebarOpen}
           onClose={() => setIsSidebarOpen(false)}
         />
-        <div className="flex flex-col flex-grow">
-          <Navbar onMenuClick={() => setIsSidebarOpen(true)} />
-          <main className="flex-grow p-2 bg-backgroundGray">{children}</main>
-        </div>
+        <ScaledLayout>
+          <div className="flex flex-col flex-grow">
+            <Navbar onMenuClick={() => setIsSidebarOpen(true)} />
+            <main className="flex-grow p-2 bg-backgroundGray">{children}</main>
+          </div>
+        </ScaledLayout>
       </div>
     </SnackbarProvider>
   );

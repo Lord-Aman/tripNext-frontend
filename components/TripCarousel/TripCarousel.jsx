@@ -35,7 +35,9 @@ export default function TripCarousel() {
   return (
     <div
       className={`${
-        isMobile ? "w-[90vw] h-[20vh] -mr-6  bg-no-repeat" : "max-w-3xl h-80"
+        isMobile
+          ? "w-[90vw] h-[20vh] ml-[12%] mx-auto  bg-no-repeat"
+          : "max-w-3xl h-80"
       } mt-4 bg-cover mx-auto relative`}
       style={{
         backgroundImage: `url(${trips[cardIndex].image.src})`,
@@ -74,7 +76,11 @@ export default function TripCarousel() {
       </Swiper>
 
       {
-        <div className="absolute bottom-2 sm:bottom-8 left-4 md:left-8 flex space-x-4">
+        <div
+          className={`absolute ${
+            isMobile ? "sm:bottom-8" : "bottom-2"
+          } left-4 md:left-8 flex space-x-4`}
+        >
           {/* Previous Button */}
           <button className="custom-prev flex items-center justify-center  sm:w-8  md:w-10  sm:h-8 w-6 md:h-10 rounded-full bg-white shadow-lg">
             <Image src={ArrowLeft} alt="Previous" />

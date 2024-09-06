@@ -1,186 +1,132 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# TripNext Backend
+
+The **TripNext Backend** is a Node.js-based backend service for managing trips, events, and tasks within the TripNext platform. It provides REST APIs for handling users, trips, events, and to-dos, and is powered by Express.js and MongoDB for efficient data handling and storage.
+
+## Features
+
+- **User Management**: Create and manage user accounts with secure data handling.
+- **Trip Management**: Create, update, and delete trips with customizable details like name, destination, and dates.
+- **Event Management**: Add and manage events related to specific trips.
+- **To-Do Management**: Add, manage, and track to-dos for trips and events.
+- **Database Management**: MongoDB is used to persist all user, trip, event, and to-do data.
+- **Environment Configuration**: The project uses `dotenv` to manage environment variables securely.
+
+## Technologies Used
+
+- **Node.js**: JavaScript runtime for building server-side applications.
+- **Express.js**: Fast, minimalist web framework for Node.js.
+- **MongoDB**: NoSQL database for storing user, trip, event, and to-do data.
+- **Mongoose**: Elegant MongoDB object modeling for Node.js.
+- **dotenv**: Environment variable management.
+- **CORS**: Cross-origin resource sharing middleware.
+
+## Prerequisites
+
+- **Node.js**: Version 14.x or higher.
+- **MongoDB**: Installed and running either locally or on a cloud platform like MongoDB Atlas.
+- **npm**: Node package manager for installing dependencies.
 
 ## Getting Started
 
-First, run the development server:
+### Clone the Repository
+
+```bash
+git clone https://github.com/Lord-Aman/tripnext-backend.git
+cd tripnext-backend
+```
+
+### Install Dependencies
+
+Install the project dependencies using npm:
+
+```bash
+npm install
+```
+
+### Environment Variables
+
+Create a `.env` file in the root directory with the following variables:
+
+```env
+MONGO_URI=your-mongodb-connection-string
+PORT=3000
+```
+
+### Run the Server
+
+Start the server locally with the following command:
+
+```bash
+npm start
+```
+
+The server will be running on `http://localhost:3000`.
+
+### Run in Development Mode
+
+To run the project in development mode with automatic server restarts using `nodemon`, use the command:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## API Endpoints
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+### User Routes
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+- **POST** `/api/users/register`: Register a new user.
+- **POST** `/api/users/login`: Authenticate a user and return a JWT token.
 
-## Learn More
+### Trip Routes
 
-To learn more about Next.js, take a look at the following resourc[<img src="https://cdn-icons-png.flaticon.com/512/6295/6295417.png" align="right" width="25%" padding-right="350">]()
+- **GET** `/api/trips`: Retrieve all trips for the logged-in user.
+- **POST** `/api/trips`: Create a new trip.
+- **PUT** `/api/trips/:id`: Update a trip by its ID.
+- **DELETE** `/api/trips/:id`: Delete a trip by its ID.
 
-# `TRIPNEXT-FRONTEND`
+### Event Routes
 
-![alt text](image.png)
+- **GET** `/api/events`: Retrieve all events for a specific trip.
+- **POST** `/api/events`: Create a new event.
+- **PUT** `/api/events/:id`: Update an event by its ID.
+- **DELETE** `/api/events/:id`: Delete an event by its ID.
 
-#### <code>This project is an exciting and innovative travel planner dashboard designed to make your travel planning effortless and enjoyable. Whether you're planning a weekend getaway or a long vacation, this dashboard brings all the tools you need into one user-friendly interface.
+### To-Do Routes
 
-Key features include:
+- **GET** `/api/todos`: Retrieve all to-dos for a specific trip.
+- **POST** `/api/todos`: Create a new to-do item.
+- **PUT** `/api/todos/:id`: Update a to-do by its ID.
+- **DELETE** `/api/todos/:id`: Delete a to-do by its ID.
 
-- Upcoming Trip Overview: Stay on top of your next adventure with a snapshot of destination, travel dates, and companions.
-- Expense Breakdown: Track your spending with an easy-to-read pie chart, helping you manage your budget across transport, accommodation, and other categories.
-- To-Do List: Stay organized with a task manager that lets you assign, prioritize, and track your trip-related tasks.
-- Interactive Map: View your destination on the map for better planning and navigation.
-- Timeline & Calendar: Easily schedule your activities and track them with a visual timeline.
-- Weather Forecast: Get real-time weather updates for your destination so you can pack accordingly.
-  </code>
+## Deployment
 
-<p align="left">
-		<em>Built with the tools and technologies:</em>
-</p>
-<p align="center">
-	<img src="https://img.shields.io/badge/Chart.js-FF6384.svg?style=flat&logo=chartdotjs&logoColor=white" alt="Chart.js">
-	<img src="https://img.shields.io/badge/JavaScript-F7DF1E.svg?style=flat&logo=JavaScript&logoColor=black" alt="JavaScript">
-	<img src="https://img.shields.io/badge/datefns-770C56.svg?style=flat&logo=date-fns&logoColor=white" alt="datefns">
-	<img src="https://img.shields.io/badge/Swiper-6332F6.svg?style=flat&logo=Swiper&logoColor=white" alt="Swiper">
-	<img src="https://img.shields.io/badge/React-61DAFB.svg?style=flat&logo=React&logoColor=black" alt="React">
-	<img src="https://img.shields.io/badge/Leaflet-199900.svg?style=flat&logo=Leaflet&logoColor=white" alt="Leaflet">
-	<img src="https://img.shields.io/badge/JSON-000000.svg?style=flat&logo=JSON&logoColor=white" alt="JSON">
-</p>
+The backend for TripNext is deployed on a Linux Virtual Machine (VM). You can access the live backend at:
 
-<br>
+[**https://tripnext-backend.labs.crio.do/**](https://tripnext-backend.labs.crio.do/)
 
-##### 🔗 Table of Contents
+## Project Structure
 
-- [📍 Overview](#-overview)
-- [📂 Repository Structure](#-repository-structure)
-- [🧩 Modules](#-modules)
-- [🚀 Getting Started](#-getting-started)
-  - [🔖 Prerequisites](#-prerequisites)
-  - [📦 Installation](#-installation)
-  - [🤖 Usage](#-usage)
-  - [🧪 Tests](#-tests)
-- [📌 Project Roadmap](#-project-roadmap)
-- [🤝 Contributing](#-contributing)
-- [🎗 License](#-license)
-- [🙌 Acknowledgments](#-acknowledgments)
-
----
-
-## 📍 Overview
-
-<code>❯ This project is an exciting and innovative travel planner dashboard designed to make your travel planning effortless and enjoyable. Whether you're planning a weekend getaway or a long vacation, this dashboard brings all the tools you need into one user-friendly interface.</code>
-
----
-
-## 📂 Repository Structure
-
-```sh
-└── tripNext-frontend/
-    ├── README.md
-    ├── app
-    │   ├── alltrips
-    │   ├── favicon.ico
-    │   ├── globals.css
-    │   ├── layout.js
-    │   └── trips
-    ├── components
-    │   ├── Button
-    │   ├── ClientWrapper
-    │   ├── EventCalendar
-    │   ├── ExpenseBubbleChart
-    │   ├── LoadingSpinner
-    │   ├── LocationMap
-    │   ├── Login
-    │   ├── Logo
-    │   ├── MenuItem
-    │   ├── Navbar
-    │   ├── NewTripModal
-    │   ├── Sidebar
-    │   ├── Todo
-    │   ├── Todos
-    │   ├── TravelCards
-    │   ├── TripCarousel
-    │   ├── TripSwiper
-    │   └── Weather
-    ├── context
-    │   └── TripContext.js
-    ├── hooks
-    │   ├── useEvents.js
-    │   ├── useResizer.js
-    │   ├── useTodos.js
-    │   ├── useTrips.js
-    │   ├── useUserData.js
-    │   └── useUserLocation.js
-    ├── jsconfig.json
-    ├── middleware.js
-    ├── next.config.mjs
-    ├── package-lock.json
-    ├── package.json
-    ├── postcss.config.mjs
-    ├── public
-    │   ├── icons
-    │   ├── images
-    │   ├── next.svg
-    │   └── vercel.svg
-    ├── tailwind.config.js
-    ├── tripContextEg.js
-    └── utils
-        └── timeUtils.js
+```bash
+├── config              # Configuration files (e.g., database setup)
+│   └── db.js           # MongoDB connection setup
+├── models              # Mongoose models for Trip, Event, and ToDo
+│   ├── eventModel.js
+│   ├── todoModel.js
+│   └── tripModel.js
+├── routes              # API route handlers for users, trips, events, and todos
+├── index.js            # Main server file
+├── package.json        # Project metadata and dependencies
+├── .env                # Environment variables (not included in repo)
+└── .gitignore          # Git ignore file for sensitive data and node_modules
 ```
 
----
+## How to Contribute
 
-## 🚀 Getting Started
+1. Fork the repository.
+2. Create a new branch with your feature or bugfix.
+3. Commit your changes and push the branch.
+4. Open a pull request for review.
 
-### 🔖 Prerequisites
+## License
 
-**JavaScript**: `version x.y.z`
-
-### 📦 Installation
-
-Build the project from source:
-
-1. Clone the tripNext-frontend repository:
-
-```sh
-❯ git clone https://github.com/Lord-Aman/tripNext-frontend
-```
-
-2. Navigate to the project directory:
-
-```sh
-❯ cd tripNext-frontend
-```
-
-3. Install the required dependencies:
-
-```sh
-❯ npm install
-```
-
-### 🤖 Usage
-
-To run the project, execute the following command:
-
-```sh
-❯ npm run dev
-```
-
----
-
-## 🙌 Acknowledgments
-
-- List any resources, contributors, inspiration, etc. here.
-
----es:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.

@@ -31,7 +31,7 @@ export default function Sidebar({ isOpen, onClose }) {
 
   return (
     <div
-      className={`fixed inset-y-0 left-0 z-50 w-72 bg-white p-6 m-2 rounded-md flex flex-col transform transition-transform duration-300 ease-in-out ${
+      className={`fixed md:h-full  inset-y-0 left-0 z-50 w-72 bg-white p-6 m-2 rounded-md flex flex-col transform transition-transform duration-300 ease-in-out ${
         isOpen ? "translate-x-0" : "-translate-x-full"
       } md:relative md:translate-x-0`}
     >

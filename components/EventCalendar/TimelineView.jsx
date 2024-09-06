@@ -28,7 +28,7 @@ const TimelineView = ({ events, openEditModal, currentTime, timelineRef }) => {
   };
 
   return (
-    <div className="relative h-[50vh] overflow-y-auto" ref={timelineRef}>
+    <div className="relative  h-[60vh] overflow-y-auto" ref={timelineRef}>
       <div
         className="absolute top-0 left-0 w-full"
         style={{ height: "2880px" }}
